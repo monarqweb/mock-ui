@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "docs:dev": "vitepress dev docs",
+    "docs:dev": "concurrently -n \"tsc,vite,docs\" -c \"blue,cyan,magenta\" \"tsc -b --watch\" \"vite build --watch\" \"vitepress dev docs\"",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "docs:generate": "node scripts/generate-component-docs.mjs"
@@ -86,6 +86,7 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4",
-    "vitepress": "^1.6.3"
+    "vitepress": "^1.6.3",
+    "concurrently": "^9.1.2"
   }
 }
