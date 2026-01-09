@@ -1,4 +1,44 @@
 import { defineConfig } from 'vitepress'
+import { readdirSync } from 'fs'
+import { join } from 'path'
+
+// Helper function to convert filename to title
+function filenameToTitle(filename: string): string {
+  // Remove .md extension
+  const name = filename.replace(/\.md$/, '')
+  
+  // Handle special cases
+  if (name === 'index') return 'Overview'
+  
+  // Convert kebab-case to Title Case
+  return name
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
+// Generate sidebar items from folder structure
+function generateSidebarItems(basePath: string): Array<{ text: string; link: string }> {
+  const componentsPath = join(process.cwd(), basePath)
+  const files = readdirSync(componentsPath)
+    .filter(file => file.endsWith('.md'))
+    .sort((a, b) => {
+      // Put index.md first
+      if (a === 'index.md') return -1
+      if (b === 'index.md') return 1
+      // Sort alphabetically
+      return a.localeCompare(b)
+    })
+  
+  return files.map(file => {
+    const name = file.replace(/\.md$/, '')
+    const link = name === 'index' ? '/components/' : `/components/${name}`
+    return {
+      text: filenameToTitle(file),
+      link,
+    }
+  })
+}
 
 export default defineConfig({
   title: 'Component Library',
@@ -12,63 +52,7 @@ export default defineConfig({
       '/components/': [
         {
           text: 'Components',
-          items: [
-            { text: 'Overview', link: '/components/' },
-            { text: 'Button', link: '/components/button' },
-            { text: 'Card', link: '/components/card' },
-            { text: 'Input', link: '/components/input' },
-            { text: 'Dialog', link: '/components/dialog' },
-            { text: 'Select', link: '/components/select' },
-            { text: 'Tabs', link: '/components/tabs' },
-            { text: 'Table', link: '/components/table' },
-            { text: 'Form', link: '/components/form' },
-            { text: 'Alert', link: '/components/alert' },
-            { text: 'Badge', link: '/components/badge' },
-            { text: 'Avatar', link: '/components/avatar' },
-            { text: 'Checkbox', link: '/components/checkbox' },
-            { text: 'Switch', link: '/components/switch' },
-            { text: 'Slider', link: '/components/slider' },
-            { text: 'Progress', link: '/components/progress' },
-            { text: 'Tooltip', link: '/components/tooltip' },
-            { text: 'Popover', link: '/components/popover' },
-            { text: 'Dropdown Menu', link: '/components/dropdown-menu' },
-            { text: 'Context Menu', link: '/components/context-menu' },
-            { text: 'Accordion', link: '/components/accordion' },
-            { text: 'Collapsible', link: '/components/collapsible' },
-            { text: 'Carousel', link: '/components/carousel' },
-            { text: 'Calendar', link: '/components/calendar' },
-            { text: 'Command', link: '/components/command' },
-            { text: 'Combobox', link: '/components/combobox' },
-            { text: 'Sheet', link: '/components/sheet' },
-            { text: 'Drawer', link: '/components/drawer' },
-            { text: 'Sidebar', link: '/components/sidebar' },
-            { text: 'Toast', link: '/components/sonner' },
-            { text: 'Skeleton', link: '/components/skeleton' },
-            { text: 'Separator', link: '/components/separator' },
-            { text: 'Scroll Area', link: '/components/scroll-area' },
-            { text: 'Resizable', link: '/components/resizable' },
-            { text: 'Radio Group', link: '/components/radio-group' },
-            { text: 'Pagination', link: '/components/pagination' },
-            { text: 'Navigation Menu', link: '/components/navigation-menu' },
-            { text: 'Menubar', link: '/components/menubar' },
-            { text: 'Label', link: '/components/label' },
-            { text: 'KBD', link: '/components/kbd' },
-            { text: 'Hover Card', link: '/components/hover-card' },
-            { text: 'Field', link: '/components/field' },
-            { text: 'Empty', link: '/components/empty' },
-            { text: 'Breadcrumb', link: '/components/breadcrumb' },
-            { text: 'Aspect Ratio', link: '/components/aspect-ratio' },
-            { text: 'Alert Dialog', link: '/components/alert-dialog' },
-            { text: 'Input Group', link: '/components/input-group' },
-            { text: 'Input OTP', link: '/components/input-otp' },
-            { text: 'Button Group', link: '/components/button-group' },
-            { text: 'Toggle', link: '/components/toggle' },
-            { text: 'Toggle Group', link: '/components/toggle-group' },
-            { text: 'Textarea', link: '/components/textarea' },
-            { text: 'Native Select', link: '/components/native-select' },
-            { text: 'Item', link: '/components/item' },
-            { text: 'Chart', link: '/components/chart' },
-          ],
+          items: generateSidebarItems('docs/components'),
         },
       ],
     },
