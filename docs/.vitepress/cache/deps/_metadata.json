@@ -1,40 +1,106 @@
 {
-  "hash": "f3f437e3",
-  "configHash": "e5fd9a10",
-  "lockfileHash": "a935e921",
-  "browserHash": "0bbe1562",
+  "hash": "100c8dab",
+  "configHash": "10ca7bdd",
+  "lockfileHash": "4c0d8e3e",
+  "browserHash": "951771bf",
   "optimized": {
+    "react": {
+      "src": "../../../../node_modules/.pnpm/react@19.2.3/node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "9aff4f35",
+      "needsInterop": true
+    },
+    "react-dom": {
+      "src": "../../../../node_modules/.pnpm/react-dom@19.2.3_react@19.2.3/node_modules/react-dom/index.js",
+      "file": "react-dom.js",
+      "fileHash": "77df9d7f",
+      "needsInterop": true
+    },
+    "react/jsx-dev-runtime": {
+      "src": "../../../../node_modules/.pnpm/react@19.2.3/node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "9710a19a",
+      "needsInterop": true
+    },
+    "react/jsx-runtime": {
+      "src": "../../../../node_modules/.pnpm/react@19.2.3/node_modules/react/jsx-runtime.js",
+      "file": "react_jsx-runtime.js",
+      "fileHash": "994f8b7b",
+      "needsInterop": true
+    },
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.5.26_typescript@5.9.3/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "47a519e4",
+      "fileHash": "df3f3af2",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/.pnpm/@vue+devtools-api@7.7.9/node_modules/@vue/devtools-api/dist/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "52bf1ad5",
+      "fileHash": "9cd21008",
       "needsInterop": false
     },
     "vitepress > @vueuse/core": {
       "src": "../../../../node_modules/.pnpm/@vueuse+core@12.8.2_typescript@5.9.3/node_modules/@vueuse/core/index.mjs",
       "file": "vitepress___@vueuse_core.js",
-      "fileHash": "b11b1b56",
+      "fileHash": "0806526d",
       "needsInterop": false
     },
-    "@theme/index": {
-      "src": "../../../../node_modules/.pnpm/vitepress@1.6.4_@algolia+client-search@5.46.2_@types+node@24.10.4_@types+react@19.2.7_c_3b0cf794df9fb7ac2df80374a9cc204a/node_modules/vitepress/dist/client/theme-default/index.js",
-      "file": "@theme_index.js",
-      "fileHash": "9c18e654",
+    "react-dom/client": {
+      "src": "../../../../node_modules/.pnpm/react-dom@19.2.3_react@19.2.3/node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "3bf1c64c",
+      "needsInterop": true
+    },
+    "@babel/standalone": {
+      "src": "../../../../node_modules/.pnpm/@babel+standalone@7.28.5/node_modules/@babel/standalone/babel.js",
+      "file": "@babel_standalone.js",
+      "fileHash": "e92db9ec",
+      "needsInterop": true
+    },
+    "@radix-ui/react-slot": {
+      "src": "../../../../node_modules/.pnpm/@radix-ui+react-slot@1.2.3_@types+react@19.2.7_react@19.2.3/node_modules/@radix-ui/react-slot/dist/index.mjs",
+      "file": "@radix-ui_react-slot.js",
+      "fileHash": "06c5a103",
+      "needsInterop": false
+    },
+    "class-variance-authority": {
+      "src": "../../../../node_modules/.pnpm/class-variance-authority@0.7.1/node_modules/class-variance-authority/dist/index.mjs",
+      "file": "class-variance-authority.js",
+      "fileHash": "5f2ca9d5",
+      "needsInterop": false
+    },
+    "clsx": {
+      "src": "../../../../node_modules/.pnpm/clsx@2.1.1/node_modules/clsx/dist/clsx.mjs",
+      "file": "clsx.js",
+      "fileHash": "697e5205",
+      "needsInterop": false
+    },
+    "tailwind-merge": {
+      "src": "../../../../node_modules/.pnpm/tailwind-merge@3.3.1/node_modules/tailwind-merge/dist/bundle-mjs.mjs",
+      "file": "tailwind-merge.js",
+      "fileHash": "0b762eb6",
       "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-WX2ITIWH": {
-      "file": "chunk-WX2ITIWH.js"
-    },
     "chunk-EZ7BNVI3": {
       "file": "chunk-EZ7BNVI3.js"
+    },
+    "chunk-E6AZFW2I": {
+      "file": "chunk-E6AZFW2I.js"
+    },
+    "chunk-33E6TPMR": {
+      "file": "chunk-33E6TPMR.js"
+    },
+    "chunk-FYGKZRUW": {
+      "file": "chunk-FYGKZRUW.js"
+    },
+    "chunk-CJUSA6EQ": {
+      "file": "chunk-CJUSA6EQ.js"
+    },
+    "chunk-5WRI5ZAA": {
+      "file": "chunk-5WRI5ZAA.js"
     }
   }
 }

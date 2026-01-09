@@ -1,6 +1,9 @@
 import { defineConfig } from 'vitepress'
 import { readdirSync } from 'fs'
-import { join } from 'path'
+import { join, resolve } from 'path'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+import { demoPlugin } from './plugins/demo'
 
 // Helper function to convert filename to title
 function filenameToTitle(filename: string): string {
@@ -43,6 +46,27 @@ function generateSidebarItems(basePath: string): Array<{ text: string; link: str
 export default defineConfig({
   title: 'Component Library',
   description: 'Documentation for UI components',
+  
+  vite: {
+    plugins: [react(), tailwindcss()],
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, '../../src'),
+      },
+    },
+    css: {
+      postcss: {
+        plugins: [],
+      },
+    },
+  },
+
+  markdown: {
+    config: (md) => {
+      md.use(demoPlugin)
+    },
+  },
+
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },

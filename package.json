@@ -87,6 +87,7 @@
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4",
     "vitepress": "^1.6.3",
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "@babel/standalone": "^7.26.0"
   }
 }
