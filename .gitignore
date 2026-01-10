@@ -12,6 +12,11 @@ coverage
 .next/
 out/
 build
+dist
+
+# vitepress
+docs/.vitepress/dist
+docs/.vitepress/cache
 
 # misc
 .DS_Store

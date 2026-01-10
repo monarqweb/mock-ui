@@ -1,19 +1,42 @@
 # Alert
 
-Alert component from shadcn/ui.
-
-## Import
-
-```tsx
-import { Alert } from "@/components/ui/alert"
-```
+Displays a callout for user attention.
 
 ## Usage
 
 ### Basic Usage
 
-```tsx
-<Alert>Content</Alert>
+```tsx demo
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from "@/components/ui/alert"
+
+<div className="grid w-full max-w-xl items-start gap-4">
+  <Alert>
+    <AlertTitle>Success! Your changes have been saved</AlertTitle>
+    <AlertDescription>
+      This is an alert with icon, title and description.
+    </AlertDescription>
+  </Alert>
+  <Alert>
+    <AlertTitle>
+      This Alert has a title and an icon. No description.
+    </AlertTitle>
+  </Alert>
+  <Alert variant="destructive">
+    <AlertTitle>Unable to process your payment.</AlertTitle>
+    <AlertDescription>
+      <p>Please verify your billing information and try again.</p>
+      <ul className="list-inside list-disc text-sm">
+        <li>Check your card details</li>
+        <li>Ensure sufficient funds</li>
+        <li>Verify billing address</li>
+      </ul>
+    </AlertDescription>
+  </Alert>
+</div>
 ```
 
 ### Variants
@@ -35,6 +58,4 @@ For detailed examples, refer to the [shadcn/ui documentation](https://ui.shadcn.
 
 ## Source
 
-```tsx:src/components/ui/alert.tsx
-// See src/components/ui/alert.tsx for the full implementation
-```
+See the [Alert Component](https://github.com/monarqweb/mock-ui/blob/main/src/components/ui/alert.tsx) for the full implementation.
