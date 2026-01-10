@@ -1,7 +1,9 @@
 <template>
   <div class="demo-container">
     <div class="demo-preview">
-      <div ref="containerRef" class="demo-content"></div>
+      <div class="demo-sandbox">
+        <div ref="containerRef" class="demo-content"></div>
+      </div>
     </div>
     <div class="demo-code" v-html="highlightedCodeHtml"></div>
   </div>
@@ -192,6 +194,21 @@ async function renderDemo() {
   padding: 1.5rem;
   background: var(--vp-c-bg);
   border-bottom: 1px solid var(--vp-c-divider);
+}
+
+/* Inside demos, undo unlayered VitePress element resets
+and fall back to the layered Tailwind rules. */
+.vp-doc .demo-sandbox,
+.vp-doc .demo-sandbox * {
+  all: revert-layer;
+}
+
+/* Re-apply only what you need for your demo layout */
+.vp-doc .demo-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 60px;
 }
 
 .demo-content {

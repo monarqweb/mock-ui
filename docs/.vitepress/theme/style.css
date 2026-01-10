@@ -1,0 +1,8 @@
+@import "../../../src/index.css";
+@import "tailwindcss";
+
+/* Scan docs markdown + VitePress theme files */
+@source "../../**/*.{md,mdx,vue,js,ts,jsx,tsx}";
+
+/* Scan your React component library */
+@source "../../../src/**/*.{js,ts,jsx,tsx}";

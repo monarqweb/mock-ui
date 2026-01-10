@@ -48,17 +48,15 @@ export default defineConfig({
   description: 'Documentation for UI components',
   
   vite: {
-    plugins: [react(), tailwindcss()],
+    plugins: [
+      react(),
+      tailwindcss(),
+    ],
     resolve: {
       alias: {
         '@': resolve(__dirname, '../../src'),
       },
-    },
-    css: {
-      postcss: {
-        plugins: [],
-      },
-    },
+    }
   },
 
   markdown: {
