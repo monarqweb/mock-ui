@@ -1,6 +1,6 @@
+import { readFile, readdir, stat, writeFile } from 'fs/promises'
+import { basename, dirname, join } from 'path'
 import { parse } from 'react-docgen-typescript'
-import { readdir, readFile, writeFile, stat } from 'fs/promises'
-import { join, relative, dirname, basename, extname } from 'path'
 import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -13,7 +13,7 @@ const registryPath = join(rootDir, 'section-registry.json')
 const parserOptions = {
   savePropValueAsString: true,
   shouldExtractLiteralValuesFromEnum: true,
-  propFilter: (prop) => {
+  propFilter: (_prop) => {
     // Include all props
     return true
   },
@@ -66,7 +66,7 @@ function extractExamplesFromJSDoc(content, componentName) {
       const codeBlockPattern = /```(?:tsx|ts|jsx)?\s*\n([\s\S]*?)\n\s*\*\s*```/
       const codeBlockMatch = exampleSection.match(codeBlockPattern)
       
-      if (codeBlockMatch && codeBlockMatch[1]) {
+      if (codeBlockMatch?.[1]) {
         let exampleCode = codeBlockMatch[1]
         // Remove JSDoc * prefixes from each line and clean up
         exampleCode = exampleCode.split('\n')
@@ -153,7 +153,7 @@ function extractJSDocDescription(content, componentName) {
  */
 function extractDescriptionFromJSDoc(jsdocBlock) {
   // Remove /** and */
-  let text = jsdocBlock.replace(/^\/\*\*|\*\/$/g, '')
+  const text = jsdocBlock.replace(/^\/\*\*|\*\/$/g, '')
   // Remove leading * from each line
   const lines = text.split('\n').map(line => line.replace(/^\s*\*\s?/, '')).filter(line => line.trim())
   
@@ -189,9 +189,9 @@ async function extractAllTypesFromFile(filePath) {
     
     // Find all interfaces
     const interfaceRegex = /(?:export\s+)?interface\s+(\w+)\s*\{([\s\S]*?)\}/g
-    let match
+    let match = interfaceRegex.exec(content)
     
-    while ((match = interfaceRegex.exec(content)) !== null) {
+    while (match !== null) {
       const typeName = match[1]
       const typeBody = match[2]
       const properties = []
@@ -237,10 +237,12 @@ async function extractAllTypesFromFile(filePath) {
       }
       
       types[typeName] = { name: typeName, properties: properties, type: 'interface' }
+      match = interfaceRegex.exec(content)
     }
     
     return types
   } catch (error) {
+    console.error(`Error extracting types from ${filePath}:`, error)
     return {}
   }
 }
@@ -268,16 +270,17 @@ function extractRelatedTypes(content, componentName) {
   const interfaceRegex = /(?:export\s+)?interface\s+(\w+)\s*\{([\s\S]*?)\}/g
   const typeRegex = /(?:export\s+)?type\s+(\w+)\s*=\s*([\s\S]+?)(?=\n\nexport|\n\/\*\*|\ninterface|\ntype|$)/g
   
-  let match
+  let match = interfaceRegex.exec(content)
   
   // Process interfaces
-  while ((match = interfaceRegex.exec(content)) !== null) {
+  while (match !== null) {
     const typeName = match[1]
     const typeBody = match[2]
     const matchIndex = match.index
     
     // Skip the main component props interface
     if (typeName === `${componentName}Props`) {
+      match = interfaceRegex.exec(content)
       continue
     }
     
@@ -340,12 +343,13 @@ function extractRelatedTypes(content, componentName) {
       description: description,
       properties: properties,
     })
+    match = interfaceRegex.exec(content)
   }
   
   // Process type aliases (simpler, usually just aliases)
-  while ((match = typeRegex.exec(content)) !== null) {
+  match = typeRegex.exec(content)
+  while (match !== null) {
     const typeName = match[1]
-    const typeBody = match[2].trim()
     
     // Skip if it's a type alias to Props (like PricingPlan = Omit<PricingCardProps, "className">)
     if (typeName.includes('Plan') || typeName.includes('Member') || typeName.includes('Post') || typeName.includes('Testimonial')) {
@@ -368,6 +372,7 @@ function extractRelatedTypes(content, componentName) {
         properties: [], // Type aliases don't have properties
       })
     }
+    match = typeRegex.exec(content)
   }
   
   return types
@@ -383,9 +388,9 @@ async function getExportsFromIndex() {
   
   // Parse export statements
   const exportRegex = /export\s+(?:type\s+)?\{([^}]+)\}\s+from\s+["']([^"']+)["']/g
-  let match
+  let match = exportRegex.exec(content)
   
-  while ((match = exportRegex.exec(content)) !== null) {
+  while (match !== null) {
     const exportList = match[1]
     const fromPath = match[2]
     
@@ -394,13 +399,13 @@ async function getExportsFromIndex() {
       const trimmed = exp.trim()
       const parts = trimmed.split(/\s+as\s+/)
       const exportName = parts[parts.length - 1].trim()
-      const importName = parts[0].trim()
       
       if (!exports[fromPath]) {
         exports[fromPath] = []
       }
       exports[fromPath].push(exportName)
     })
+    match = exportRegex.exec(content)
   }
   
   return exports
@@ -417,12 +422,13 @@ function extractDefaultValues(content, componentName) {
   if (match) {
     const params = match[1]
     const paramRegex = /(\w+)\s*=\s*([^,)]+)/g
-    let paramMatch
+    let paramMatch = paramRegex.exec(params)
     
-    while ((paramMatch = paramRegex.exec(params)) !== null) {
+    while (paramMatch !== null) {
       const paramName = paramMatch[1].trim()
       const defaultValue = paramMatch[2].trim()
       defaults[paramName] = defaultValue
+      paramMatch = paramRegex.exec(params)
     }
   }
   
@@ -434,7 +440,6 @@ function extractDefaultValues(content, componentName) {
  */
 async function processComponentFile(filePath, category, exportsMap) {
   try {
-    const relativePath = relative(sectionsDir, filePath)
     const fileName = basename(filePath, '.tsx')
     
     // Read raw file content first for JSDoc extraction
@@ -487,10 +492,10 @@ async function processComponentFile(filePath, category, exportsMap) {
           
           // If not found, check utils files
           if (!nestedType) {
-            for (const [propsTypeName, importPath] of Object.entries(utilsImports)) {
+            for (const [_propsTypeName, importPath] of Object.entries(utilsImports)) {
               const utilsFilePath = join(fileDir, 'utils', importPath.replace(/\.tsx?$/, '') + '.tsx')
               const utilsTypes = await extractAllTypesFromFile(utilsFilePath)
-              if (utilsTypes[baseTypeName]) {
+              if (utilsTypes?.[baseTypeName]) {
                 nestedType = utilsTypes[baseTypeName]
                 break
               }
@@ -498,7 +503,7 @@ async function processComponentFile(filePath, category, exportsMap) {
           }
           
           // If found, expand it recursively
-          if (nestedType && nestedType.properties && nestedType.properties.length > 0) {
+          if (nestedType?.properties && nestedType.properties.length > 0) {
             // Recursively expand nested properties
             const nestedExpanded = await expandNestedTypes(nestedType.properties, fileContent, relatedTypesMap, utilsImports, fileDir)
             expandedProp.expandedProperties = nestedExpanded
@@ -517,8 +522,8 @@ async function processComponentFile(filePath, category, exportsMap) {
       // Extract imports to find utils files
       const importRegex = /import\s+.*?\s+from\s+["']\.\/utils\/([^"']+)["']/g
       const utilsImports = {}
-      let importMatch
-      while ((importMatch = importRegex.exec(content)) !== null) {
+      let importMatch = importRegex.exec(content)
+      while (importMatch !== null) {
         const importPath = importMatch[1]
         // Extract Props type name from import (e.g., "type BlogCardProps" or just "BlogCardProps")
         const typeMatch = content.substring(Math.max(0, importMatch.index - 100), importMatch.index + importMatch[0].length).match(/type\s+(\w+Props)/)
@@ -526,6 +531,7 @@ async function processComponentFile(filePath, category, exportsMap) {
           const propsTypeName = typeMatch[1]
           utilsImports[propsTypeName] = importPath
         }
+        importMatch = importRegex.exec(content)
       }
       
       // Create a map of related types for quick lookup
@@ -551,9 +557,9 @@ async function processComponentFile(filePath, category, exportsMap) {
           const baseTypeName = arrayMatch[1]
           
           // First, look for the related type definition in the same file
-          let relatedType = relatedTypes.find(t => t.name === baseTypeName)
+          const relatedType = relatedTypes.find(t => t.name === baseTypeName)
           
-          if (relatedType && relatedType.properties && relatedType.properties.length > 0) {
+          if (relatedType?.properties && relatedType.properties.length > 0) {
             // Expand the properties directly into the prop, recursively expanding nested types
             const fileDir = dirname(filePath)
             prop.expandedProperties = await expandNestedTypes(relatedType.properties, content, relatedTypesMap, utilsImports, fileDir)
@@ -564,7 +570,7 @@ async function processComponentFile(filePath, category, exportsMap) {
               const importPath = utilsImports[baseTypeName]
               const utilsFilePath = join(dirname(filePath), 'utils', importPath.replace(/\.tsx?$/, '') + '.tsx')
               const utilsProps = await extractPropsFromUtilsFile(utilsFilePath)
-              if (utilsProps && utilsProps.name === baseTypeName) {
+              if (utilsProps?.name === baseTypeName) {
                 // Recursively expand nested types in utils props
                 const fileDir = dirname(filePath)
                 const allUtilsTypes = await extractAllTypesFromFile(utilsFilePath)
@@ -586,7 +592,7 @@ async function processComponentFile(filePath, category, exportsMap) {
                   const importPath = utilsImports[propsTypeName]
                   const utilsFilePath = join(dirname(filePath), 'utils', importPath.replace(/\.tsx?$/, '') + '.tsx')
                   const utilsProps = await extractPropsFromUtilsFile(utilsFilePath)
-                  if (utilsProps && utilsProps.name === propsTypeName) {
+                  if (utilsProps?.name === propsTypeName) {
                     // Recursively expand nested types in utils props
                     const fileDir = dirname(filePath)
                     const allUtilsTypes = await extractAllTypesFromFile(utilsFilePath)
