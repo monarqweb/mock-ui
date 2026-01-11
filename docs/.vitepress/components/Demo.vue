@@ -109,14 +109,16 @@ async function renderDemo() {
     while ((match = namedImportRegex.exec(code)) !== null) {
       const namesStr = match[1]
       const path = match[2]
-      const names = namesStr.split(',').map(s => {
-        const trimmed = s.trim()
-        const aliasMatch = trimmed.match(/^(.+?)\s+as\s+(.+)$/)
-        if (aliasMatch) {
-          return { imported: aliasMatch[1].trim(), local: aliasMatch[2].trim() }
-        }
-        return { local: trimmed }
-      })
+      const names = namesStr.split(',')
+        .map(s => s.trim())
+        .filter(s => s.length > 0)
+        .map(trimmed => {
+          const aliasMatch = trimmed.match(/^(.+?)\s+as\s+(.+)$/)
+          if (aliasMatch) {
+            return { imported: aliasMatch[1].trim(), local: aliasMatch[2].trim() }
+          }
+          return { local: trimmed }
+        })
       imports.push({ kind: 'named', path, names })
     }
     
