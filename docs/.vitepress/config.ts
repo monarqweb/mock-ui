@@ -44,9 +44,10 @@ function generateSidebarItems(basePath: string): Array<{ text: string; link: str
 }
 
 export default defineConfig({
-  title: 'Component Library',
-  description: 'Documentation for UI components',
-  
+  title: 'Chrysalis',
+  description: 'UI components for Monarq Web Design',
+  base: "/mock-ui/",
+
   vite: {
     plugins: [
       react(),
