@@ -46,3 +46,4 @@ tsconfig.tsbuildinfo
 .vscode
 
 .notes
+section-registry.json

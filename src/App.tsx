@@ -1,8 +1,8 @@
 export function App() {
   return (
     <div>
-      {/* Insert sections here */}
-      
+      {/* Insert sections */}
+      {/* Insert next section component here */}
       {/* Section end */}
     </div>
   )
