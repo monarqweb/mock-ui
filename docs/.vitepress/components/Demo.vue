@@ -14,6 +14,7 @@ import { ref, onMounted, watch, nextTick, computed } from 'vue'
 import { createRoot, type Root } from 'react-dom/client'
 import React from 'react'
 import { transform } from '@babel/standalone'
+import { Toaster } from 'sonner'
 
 const props = defineProps<{
   code: string
@@ -64,6 +65,22 @@ const decodedCode = computed(() => decodeHtmlEntities(props.code))
 
 const containerRef = ref<HTMLElement>()
 let reactRoot: Root | null = null
+let overlayRoot: Root | null = null
+
+function ensureOverlayRoot() {
+  if (typeof window === 'undefined') return
+  if (overlayRoot) return
+
+  let container = document.getElementById('demo-react-overlays')
+  if (!container) {
+    container = document.createElement('div')
+    container.id = 'demo-react-overlays'
+    document.body.appendChild(container)
+  }
+
+  overlayRoot = createRoot(container)
+  overlayRoot.render(React.createElement(Toaster, { richColors: true }))
+}
 
 onMounted(() => {
   renderDemo()
@@ -76,13 +93,16 @@ watch(() => props.code, () => {
 async function renderDemo() {
   if (!containerRef.value) return
 
+  ensureOverlayRoot()
+
   const externalModuleAllowlist: Record<string, () => Promise<any>> = {
-  "react": () => import("react"),
-  "lucide-react": () => import("lucide-react"),
-  "@tabler/icons-react": () => import("@tabler/icons-react"),
-  "recharts": () => import("recharts"),
-  // add more as you need
-}
+    "@tabler/icons-react": () => import("@tabler/icons-react"),
+    "lucide-react": () => import("lucide-react"),
+    "react": () => import("react"),
+    "recharts": () => import("recharts"),
+    "sonner": () => import("sonner"),
+    // add more as you need
+  }
 
   await nextTick()
 
