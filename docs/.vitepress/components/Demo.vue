@@ -79,6 +79,7 @@ async function renderDemo() {
   const externalModuleAllowlist: Record<string, () => Promise<any>> = {
   "react": () => import("react"),
   "lucide-react": () => import("lucide-react"),
+  "@tabler/icons-react": () => import("@tabler/icons-react"),
   "recharts": () => import("recharts"),
   // add more as you need
 }
