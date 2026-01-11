@@ -113,12 +113,15 @@ async function renderDemo() {
       const names = namesStr.split(',')
         .map(s => s.trim())
         .filter(s => s.length > 0)
+        .filter(s => !s.startsWith('type '))
         .map(trimmed => {
-          const aliasMatch = trimmed.match(/^(.+?)\s+as\s+(.+)$/)
+          // Strip leading 'type ' defensively (shouldn't happen after filter, but be safe)
+          const cleaned = trimmed.replace(/^type\s+/, '')
+          const aliasMatch = cleaned.match(/^(.+?)\s+as\s+(.+)$/)
           if (aliasMatch) {
             return { imported: aliasMatch[1].trim(), local: aliasMatch[2].trim() }
           }
-          return { local: trimmed }
+          return { local: cleaned }
         })
       imports.push({ kind: 'named', path, names })
     }
@@ -241,7 +244,8 @@ async function renderDemo() {
     let transformedCode = codeToTransform
     try {
       const result = transform(transformedCode, {
-        presets: ['react'],
+        filename: 'demo.tsx',
+        presets: ['typescript', 'react'],
       })
       transformedCode = result.code || transformedCode
     } catch (transformError: any) {
@@ -277,14 +281,18 @@ async function renderDemo() {
       else if (exportsObj.Demo) {
         component = exportsObj.Demo
       }
-      // 3. first named export ending with "Demo"
+      // 3. named export "Component"
+      else if (exportsObj.Component) {
+        component = exportsObj.Component
+      }
+      // 4. first named export ending with "Demo"
       else {
         const demoExports = Object.keys(exportsObj).filter(k => k.endsWith('Demo'))
         if (demoExports.length > 0) {
           component = exportsObj[demoExports[0]]
         }
       }
-      // 4. if exactly one export, use it
+      // 5. if exactly one export, use it
       if (!component) {
         const exportKeys = Object.keys(exportsObj).filter(k => k !== 'default')
         if (exportKeys.length === 1) {
