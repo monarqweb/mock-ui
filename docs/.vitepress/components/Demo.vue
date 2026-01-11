@@ -163,6 +163,12 @@ async function renderDemo() {
         continue
       }
 
+      if (path.startsWith('@/lib/utils')) {
+        const filename = path.replace('@/lib/utils', '').replace(/\.ts$/, '')
+        importedModules[path] = await import(`@/lib/utils${filename}.ts`)
+        continue
+      }
+
       const loader = externalModuleAllowlist[path]
       if (loader) {
         importedModules[path] = await loader()
