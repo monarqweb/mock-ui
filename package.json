@@ -11,7 +11,8 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "docs:generate": "node scripts/generate-component-docs.mjs"
+    "docs:generate": "node scripts/generate-component-docs.mjs",
+    "sections:generate": "node scripts/generate-section-registry.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.0.0-rc.2",
@@ -82,6 +83,7 @@
     "globals": "^16.5.0",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "react-docgen-typescript": "^2.4.0",
     "tailwindcss": "^4.1.17",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
