@@ -164,9 +164,15 @@ async function renderDemo() {
         continue
       }
 
-      if (path.startsWith('@/lib/utils')) {
-        const filename = path.replace('@/lib/utils', '').replace(/\.ts$/, '')
-        importedModules[path] = await import(`@/lib/utils${filename}.ts`)
+      if (path.startsWith('@/lib/')) {
+        const filename = path.replace('@/lib/', '').replace(/\.ts$/, '')
+        importedModules[path] = await import(`@/lib/${filename}.ts`)
+        continue
+      }
+
+      if (path.startsWith('@/hooks/')) {
+        const filename = path.replace('@/hooks/', '').replace(/\.ts$/, '')
+        importedModules[path] = await import(`@/hooks/${filename}.ts`)
         continue
       }
 
