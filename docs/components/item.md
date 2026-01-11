@@ -1,19 +1,58 @@
 # Item
 
-Item component from shadcn/ui.
-
-## Import
-
-```tsx
-import { Item } from "@/components/ui/item"
-```
+A versatile component that you can use to display any content.
 
 ## Usage
 
 ### Basic Usage
 
-```tsx
-<Item>Content</Item>
+The Item component is a straightforward flex container that can house nearly any type of content. Use it to display a title, description, and actions. Group it with the ItemGroup component to create a list of items.
+
+```tsx demo
+import { BadgeCheckIcon, ChevronRightIcon } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item"
+
+export function ItemDemo() {
+  return (
+    <div className="flex w-full max-w-md flex-col gap-6">
+      <Item variant="outline">
+        <ItemContent>
+          <ItemTitle>Basic Item</ItemTitle>
+          <ItemDescription>
+            A simple item with title and description.
+          </ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          <Button variant="outline" size="sm">
+            Action
+          </Button>
+        </ItemActions>
+      </Item>
+      <Item variant="outline" size="sm" asChild>
+        <a href="#">
+          <ItemMedia>
+            <BadgeCheckIcon className="size-5" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Your profile has been verified.</ItemTitle>
+          </ItemContent>
+          <ItemActions>
+            <ChevronRightIcon className="size-4" />
+          </ItemActions>
+        </a>
+      </Item>
+    </div>
+  )
+}
 ```
 
 ### Variants
@@ -25,16 +64,8 @@ This component supports multiple variants. Check the source code for available o
 ```
 
 ## Props
-
-See the component source file for full TypeScript prop definitions:
-`src/components/ui/item.tsx`
+See the [component source file](https://github.com/monarqweb/mock-ui/blob/main/src/components/ui/item.tsx) for full TypeScript prop definitions.
 
 ## Examples
 
 For detailed examples, refer to the [shadcn/ui documentation](https://ui.shadcn.com/docs/components/item).
-
-## Source
-
-```tsx:src/components/ui/item.tsx
-// See src/components/ui/item.tsx for the full implementation
-```
