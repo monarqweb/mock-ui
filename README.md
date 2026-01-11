@@ -62,6 +62,7 @@ yarn preview
 The project includes auto-generated component documentation powered by VitePress.
 
 **Start the docs dev server:**
+
 ```bash
 npm run docs:dev
 # or
@@ -71,16 +72,19 @@ yarn docs:dev
 ```
 
 **Generate component docs:**
+
 ```bash
 npm run docs:generate
 ```
 
 **Build docs for production:**
+
 ```bash
 npm run docs:build
 ```
 
 The documentation is available at `http://localhost:5173` when running `docs:dev`, and includes:
+
 - Component usage examples
 - Props documentation
 - Import instructions
@@ -165,7 +169,7 @@ function App() {
           { label: "About", href: "/about" }
         ]}
       />
-      
+
       <HeroCentered
         title="Welcome to Our Platform"
         description="Build amazing things with our tools"
@@ -174,7 +178,7 @@ function App() {
           { label: "Learn More", variant: "outline" }
         ]}
       />
-      
+
       <PricingGrid
         title="Choose Your Plan"
         plans={[
@@ -188,6 +192,7 @@ function App() {
 ```
 
 **Key Features of Section Components:**
+
 - ✅ Dynamic arrays - No fixed numbers (e.g., `plans: PricingPlan[]`, `features: Feature[]`)
 - ✅ Comprehensive JSDoc - Full prop documentation with examples
 - ✅ Multiple variants - Descriptive names allow multiple versions (e.g., `hero-centered.tsx`, `pricing-grid.tsx`)
@@ -199,6 +204,7 @@ function App() {
 ### Primitive UI Components (55+)
 
 All shadcn/ui components are included:
+
 - Accordion, Alert, Alert Dialog, Aspect Ratio, Avatar
 - Badge, Breadcrumb, Button, Button Group
 - Calendar, Card, Carousel, Chart, Checkbox

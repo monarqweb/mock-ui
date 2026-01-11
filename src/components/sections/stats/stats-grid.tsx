@@ -22,18 +22,18 @@ export interface Stat {
 
 /**
  * StatsGrid - Renders a statistics section with a grid of metric cards.
- * 
+ *
  * This component displays a title, description, and a grid of statistic/metric cards.
  * The number of stat cards is determined by the length of the `stats` array.
  * Each stat can include a value, label, description, icon, and optional prefix/suffix.
- * 
+ *
  * @param {StatsGridProps} props - Component props
  * @param {string} [props.title] - Section title
  * @param {string} [props.description] - Section description
  * @param {Stat[]} props.stats - Array of statistic objects
  * @param {number} [props.columns] - Number of columns in the grid (default: 4)
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <StatsGrid
@@ -66,7 +66,7 @@ export function StatsGrid({
   className,
 }: StatsGridProps) {
   return (
-    <section className={cn("py-16 px-4", className)}>
+    <section className={cn("px-4 py-16", className)}>
       <div className="mx-auto max-w-7xl">
         {(title || description) && (
           <div className="mb-12 text-center">
@@ -76,7 +76,9 @@ export function StatsGrid({
               </h2>
             )}
             {description && (
-              <p className="mt-4 text-lg text-muted-foreground">{description}</p>
+              <p className="text-muted-foreground mt-4 text-lg">
+                {description}
+              </p>
             )}
           </div>
         )}
@@ -92,7 +94,9 @@ export function StatsGrid({
           {stats.map((stat) => (
             <Card key={stat.label} className="text-center">
               <CardContent className="pt-6">
-                {stat.icon && <div className="mb-4 flex justify-center">{stat.icon}</div>}
+                {stat.icon && (
+                  <div className="mb-4 flex justify-center">{stat.icon}</div>
+                )}
                 <div className="mb-2 text-4xl font-bold">
                   {stat.prefix}
                   {typeof stat.value === "number"
@@ -114,4 +118,3 @@ export function StatsGrid({
     </section>
   )
 }
-

@@ -1,6 +1,12 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -22,11 +28,11 @@ export interface ContactInfo {
 
 /**
  * ContactForm - Renders a contact section with contact form and/or contact information.
- * 
+ *
  * This component displays a contact form for users to send messages, along with optional
  * contact information (email, phone, address, etc.). The form includes fields for name,
  * email, subject, and message. Contact info items are displayed as an array.
- * 
+ *
  * @param {ContactFormProps} props - Component props
  * @param {string} [props.title] - Section title
  * @param {string} [props.description] - Section description
@@ -37,7 +43,7 @@ export interface ContactInfo {
  * @param {Function} [props.onSubmit] - Optional form submit handler
  * @param {string} [props.submitLabel] - Submit button label (default: "Send Message")
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <ContactForm
@@ -94,7 +100,7 @@ export function ContactForm({
   }
 
   return (
-    <section className={cn("py-16 px-4", className)}>
+    <section className={cn("px-4 py-16", className)}>
       <div className="mx-auto max-w-7xl">
         {(title || description) && (
           <div className="mb-12 text-center">
@@ -104,7 +110,9 @@ export function ContactForm({
               </h2>
             )}
             {description && (
-              <p className="mt-4 text-lg text-muted-foreground">{description}</p>
+              <p className="text-muted-foreground mt-4 text-lg">
+                {description}
+              </p>
             )}
           </div>
         )}
@@ -113,7 +121,9 @@ export function ContactForm({
             <Card>
               <CardHeader>
                 <CardTitle>Send us a message</CardTitle>
-                {description && <CardDescription>{description}</CardDescription>}
+                {description && (
+                  <CardDescription>{description}</CardDescription>
+                )}
               </CardHeader>
               <CardContent>
                 <form
@@ -138,12 +148,7 @@ export function ContactForm({
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="message">Message</Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      rows={6}
-                      required
-                    />
+                    <Textarea id="message" name="message" rows={6} required />
                   </div>
                   <Button type="submit" className="w-full">
                     {submitLabel}
@@ -169,7 +174,9 @@ export function ContactForm({
                           {info.value}
                         </a>
                       ) : (
-                        <div className="text-muted-foreground">{info.value}</div>
+                        <div className="text-muted-foreground">
+                          {info.value}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -182,4 +189,3 @@ export function ContactForm({
     </section>
   )
 }
-

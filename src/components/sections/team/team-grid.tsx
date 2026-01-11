@@ -1,5 +1,8 @@
 import { cn } from "@/lib/utils"
-import { TeamMemberCard, type TeamMemberCardProps } from "./utils/team-member-card"
+import {
+  TeamMemberCard,
+  type TeamMemberCardProps,
+} from "./utils/team-member-card"
 
 /**
  * TeamMember - Represents a team member configuration.
@@ -8,18 +11,18 @@ export type TeamMember = TeamMemberCardProps
 
 /**
  * TeamGrid - Renders a team section with a grid of team member cards.
- * 
+ *
  * This component displays a title, description, and a grid of team member cards.
  * The number of team member cards is determined by the length of the `members` array.
  * Card rendering uses the TeamMemberCard sub-component from the utils directory.
- * 
+ *
  * @param {TeamGridProps} props - Component props
  * @param {string} [props.title] - Section title
  * @param {string} [props.description] - Section description
  * @param {TeamMember[]} props.members - Array of team member objects
  * @param {number} [props.columns] - Number of columns in the grid (default: 3)
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <TeamGrid
@@ -57,7 +60,7 @@ export function TeamGrid({
   className,
 }: TeamGridProps) {
   return (
-    <section className={cn("py-16 px-4", className)}>
+    <section className={cn("px-4 py-16", className)}>
       <div className="mx-auto max-w-7xl">
         {(title || description) && (
           <div className="mb-12 text-center">
@@ -67,7 +70,9 @@ export function TeamGrid({
               </h2>
             )}
             {description && (
-              <p className="mt-4 text-lg text-muted-foreground">{description}</p>
+              <p className="text-muted-foreground mt-4 text-lg">
+                {description}
+              </p>
             )}
           </div>
         )}
@@ -91,4 +96,3 @@ export function TeamGrid({
     </section>
   )
 }
-

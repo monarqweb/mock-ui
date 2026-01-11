@@ -25,6 +25,7 @@ This is a **Vite + React component library** for building modern websites. It in
   - Blog post listings
 
 All section components:
+
 - Accept dynamic arrays for flexible content (no fixed numbers)
 - Include comprehensive JSDoc documentation
 - Use primitive UI components from `src/components/ui/`
@@ -41,6 +42,7 @@ npx changeset
 ```
 
 This will prompt you to:
+
 1. Select which packages changed (if applicable)
 2. Choose the type of change (patch, minor, or major)
 3. Write a description of the changes
@@ -54,6 +56,7 @@ This will prompt you to:
 ### Example Changeset
 
 For adding a new section component:
+
 ```markdown
 ---
 "vite-react-components": minor
@@ -65,6 +68,7 @@ Add new hero-split.tsx section component variant
 ### Versioning and Publishing
 
 Changesets will automatically:
+
 - Update version numbers in `package.json`
 - Generate changelog entries
 - Prepare release notes

@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
 /**
@@ -30,7 +37,7 @@ export interface BlogCardProps {
 
 /**
  * BlogCard - Renders an individual blog post card.
- * 
+ *
  * This component displays a blog post with title, excerpt, image, author, date, and link.
  */
 export function BlogCard({
@@ -63,7 +70,9 @@ export function BlogCard({
           </span>
         )}
         <CardTitle className="line-clamp-2">{title}</CardTitle>
-        {excerpt && <CardDescription className="line-clamp-3">{excerpt}</CardDescription>}
+        {excerpt && (
+          <CardDescription className="line-clamp-3">{excerpt}</CardDescription>
+        )}
       </CardHeader>
       <CardContent className="flex-1">
         {(author || date || readTime) && (
@@ -82,4 +91,3 @@ export function BlogCard({
     </Card>
   )
 }
-

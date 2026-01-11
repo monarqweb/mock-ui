@@ -7,7 +7,6 @@
 /* Scan your React component library */
 @source "../../../src/**/*.{js,ts,jsx,tsx}";
 
-
 /* Prevent VitePress from overriding Radix UI portal styles */
 [data-radix-portal],
 [data-radix-portal] * {

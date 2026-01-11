@@ -8,7 +8,13 @@ export interface CTAButton {
   /** Button label text */
   label: string
   /** Button variant (default, outline, secondary, etc.) */
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link"
   /** Button size */
   size?: "default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"
   /** Click handler function */
@@ -19,11 +25,11 @@ export interface CTAButton {
 
 /**
  * HeroCentered - Renders a centered hero section with title, description, CTA buttons, and optional image/background.
- * 
+ *
  * This component displays a prominent hero section typically used at the top of landing pages.
  * It supports a title, description, multiple CTA buttons (rendered as an array), and optional visual elements.
  * The layout is centered both horizontally and vertically within the section.
- * 
+ *
  * @param {HeroCenteredProps} props - Component props
  * @param {string} props.title - Main hero title/headline
  * @param {string} [props.description] - Supporting description text below the title
@@ -32,7 +38,7 @@ export interface CTAButton {
  * @param {string} [props.imageAlt] - Alt text for the image
  * @param {string} [props.backgroundImageUrl] - Optional background image URL
  * @param {string} [props.className] - Additional CSS classes for the container
- * 
+ *
  * @example
  * ```tsx
  * <HeroCentered
@@ -88,14 +94,14 @@ export function HeroCentered({
       }
     >
       {backgroundImageUrl && (
-        <div className="absolute inset-0 bg-background/60 backdrop-blur-sm" />
+        <div className="bg-background/60 absolute inset-0 backdrop-blur-sm" />
       )}
       <div className="relative z-10 mx-auto max-w-4xl space-y-6">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
           {title}
         </h1>
         {description && (
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground sm:text-xl">
+          <p className="text-muted-foreground mx-auto max-w-2xl text-lg sm:text-xl">
             {description}
           </p>
         )}
@@ -131,4 +137,3 @@ export function HeroCentered({
     </section>
   )
 }
-

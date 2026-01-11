@@ -8,7 +8,13 @@ export interface CTAButton {
   /** Button label text */
   label: string
   /** Button variant (default, outline, secondary, etc.) */
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link"
   /** Button size */
   size?: "default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"
   /** Click handler function */
@@ -19,18 +25,18 @@ export interface CTAButton {
 
 /**
  * CTADefault - Renders a call-to-action section with title, description, and CTA buttons.
- * 
+ *
  * This component displays a prominent CTA section typically used to encourage user action.
  * It supports a title, description, and multiple CTA buttons (rendered as an array).
  * The layout is centered and can include optional background styling.
- * 
+ *
  * @param {CTADefaultProps} props - Component props
  * @param {string} props.title - CTA title/headline
  * @param {string} [props.description] - Supporting description text
  * @param {CTAButton[]} [props.ctaButtons] - Array of CTA button configurations to display
  * @param {string} [props.backgroundImageUrl] - Optional background image URL
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <CTADefault
@@ -66,7 +72,7 @@ export function CTADefault({
   return (
     <section
       className={cn(
-        "relative py-16 px-4",
+        "relative px-4 py-16",
         backgroundImageUrl && "bg-cover bg-center bg-no-repeat",
         className
       )}
@@ -79,14 +85,14 @@ export function CTADefault({
       }
     >
       {backgroundImageUrl && (
-        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+        <div className="bg-background/80 absolute inset-0 backdrop-blur-sm" />
       )}
       <div className="relative z-10 mx-auto max-w-4xl text-center">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
           {title}
         </h2>
         {description && (
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground sm:text-xl">
+          <p className="text-muted-foreground mx-auto mt-4 max-w-2xl text-lg sm:text-xl">
             {description}
           </p>
         )}
@@ -113,4 +119,3 @@ export function CTADefault({
     </section>
   )
 }
-

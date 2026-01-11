@@ -1,6 +1,13 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
 /**
@@ -27,18 +34,18 @@ export interface Service {
 
 /**
  * ServicesGrid - Renders a services section with a grid of service cards.
- * 
+ *
  * This component displays a title, description, and a grid of service offering cards.
  * The number of service cards is determined by the length of the `services` array.
  * Each service can include a title, description, optional icon/image, and optional CTA button.
- * 
+ *
  * @param {ServicesGridProps} props - Component props
  * @param {string} [props.title] - Section title
  * @param {string} [props.description] - Section description
  * @param {Service[]} props.services - Array of service objects
  * @param {number} [props.columns] - Number of columns in the grid (default: 3)
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <ServicesGrid
@@ -76,7 +83,7 @@ export function ServicesGrid({
   className,
 }: ServicesGridProps) {
   return (
-    <section className={cn("py-16 px-4", className)}>
+    <section className={cn("px-4 py-16", className)}>
       <div className="mx-auto max-w-7xl">
         {(title || description) && (
           <div className="mb-12 text-center">
@@ -86,7 +93,9 @@ export function ServicesGrid({
               </h2>
             )}
             {description && (
-              <p className="mt-4 text-lg text-muted-foreground">{description}</p>
+              <p className="text-muted-foreground mt-4 text-lg">
+                {description}
+              </p>
             )}
           </div>
         )}
@@ -128,7 +137,9 @@ export function ServicesGrid({
                     className="w-full"
                   >
                     {service.ctaHref ? (
-                      <a href={service.ctaHref}>{service.ctaLabel || "Learn More"}</a>
+                      <a href={service.ctaHref}>
+                        {service.ctaLabel || "Learn More"}
+                      </a>
                     ) : (
                       service.ctaLabel || "Learn More"
                     )}
@@ -142,4 +153,3 @@ export function ServicesGrid({
     </section>
   )
 }
-

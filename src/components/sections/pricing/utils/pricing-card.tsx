@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { CheckIcon } from "lucide-react"
 
@@ -41,7 +48,7 @@ export interface PricingCardProps {
 
 /**
  * PricingCard - Renders an individual pricing plan card.
- * 
+ *
  * This component displays a single pricing plan with name, price, features, and CTA button.
  * Can be marked as featured to highlight a recommended plan.
  */
@@ -79,7 +86,9 @@ export function PricingCard({
             {price}
           </span>
           {period && (
-            <span className="text-muted-foreground ml-2 text-sm">/{period}</span>
+            <span className="text-muted-foreground ml-2 text-sm">
+              /{period}
+            </span>
           )}
         </div>
       </CardHeader>
@@ -118,4 +127,3 @@ export function PricingCard({
     </Card>
   )
 }
-

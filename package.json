@@ -10,6 +10,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc -b --noEmit",
+    "test": "echo \"No tests specified\"",
     "preview": "vite preview",
     "docs:dev": "concurrently -n \"tsc,vite,docs\" -c \"blue,cyan,magenta\" \"tsc -b --watch\" \"vite build --watch\" \"vitepress dev docs\"",
     "docs:build": "vitepress build docs",

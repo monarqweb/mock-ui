@@ -20,18 +20,18 @@ export interface FAQItem {
 
 /**
  * FAQAccordion - Renders an FAQ section with an accordion of questions and answers.
- * 
+ *
  * This component displays a title, description, and an accordion of FAQ items.
  * The number of FAQ items is determined by the length of the `items` array.
  * Each item can be expanded/collapsed to show the answer.
- * 
+ *
  * @param {FAQAccordionProps} props - Component props
  * @param {string} [props.title] - Section title
  * @param {string} [props.description] - Section description
  * @param {FAQItem[]} props.items - Array of FAQ item objects
  * @param {"single" | "multiple"} [props.type] - Accordion type - single or multiple items open (default: "single")
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <FAQAccordion
@@ -64,7 +64,7 @@ export function FAQAccordion({
   className,
 }: FAQAccordionProps) {
   return (
-    <section className={cn("py-16 px-4", className)}>
+    <section className={cn("px-4 py-16", className)}>
       <div className="mx-auto max-w-3xl">
         {(title || description) && (
           <div className="mb-12 text-center">
@@ -74,13 +74,18 @@ export function FAQAccordion({
               </h2>
             )}
             {description && (
-              <p className="mt-4 text-lg text-muted-foreground">{description}</p>
+              <p className="text-muted-foreground mt-4 text-lg">
+                {description}
+              </p>
             )}
           </div>
         )}
         <Accordion type={type} className="w-full">
           {items.map((item, index) => (
-            <AccordionItem key={item.id || `faq-${index}`} value={item.id || `faq-${index}`}>
+            <AccordionItem
+              key={item.id || `faq-${index}`}
+              value={item.id || `faq-${index}`}
+            >
               <AccordionTrigger className="text-left">
                 {item.question}
               </AccordionTrigger>
@@ -92,4 +97,3 @@ export function FAQAccordion({
     </section>
   )
 }
-

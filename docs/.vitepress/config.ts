@@ -1,41 +1,43 @@
-import { defineConfig } from 'vitepress'
-import { readdirSync } from 'fs'
-import { join, resolve } from 'path'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import { demoPlugin } from './plugins/demo'
+import { defineConfig } from "vitepress"
+import { readdirSync } from "fs"
+import { join, resolve } from "path"
+import react from "@vitejs/plugin-react"
+import tailwindcss from "@tailwindcss/vite"
+import { demoPlugin } from "./plugins/demo"
 
 // Helper function to convert filename to title
 function filenameToTitle(filename: string): string {
   // Remove .md extension
-  const name = filename.replace(/\.md$/, '')
-  
+  const name = filename.replace(/\.md$/, "")
+
   // Handle special cases
-  if (name === 'index') return 'Overview'
-  
+  if (name === "index") return "Overview"
+
   // Convert kebab-case to Title Case
   return name
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ")
 }
 
 // Generate sidebar items from folder structure
-function generateSidebarItems(basePath: string): Array<{ text: string; link: string }> {
+function generateSidebarItems(
+  basePath: string
+): Array<{ text: string; link: string }> {
   const componentsPath = join(process.cwd(), basePath)
   const files = readdirSync(componentsPath)
-    .filter(file => file.endsWith('.md'))
+    .filter((file) => file.endsWith(".md"))
     .sort((a, b) => {
       // Put index.md first
-      if (a === 'index.md') return -1
-      if (b === 'index.md') return 1
+      if (a === "index.md") return -1
+      if (b === "index.md") return 1
       // Sort alphabetically
       return a.localeCompare(b)
     })
-  
-  return files.map(file => {
-    const name = file.replace(/\.md$/, '')
-    const link = name === 'index' ? '/components/' : `/components/${name}`
+
+  return files.map((file) => {
+    const name = file.replace(/\.md$/, "")
+    const link = name === "index" ? "/components/" : `/components/${name}`
     return {
       text: filenameToTitle(file),
       link,
@@ -44,20 +46,17 @@ function generateSidebarItems(basePath: string): Array<{ text: string; link: str
 }
 
 export default defineConfig({
-  title: 'Chrysalis',
-  description: 'UI components for Monarq Web Design',
+  title: "Chrysalis",
+  description: "UI components for Monarq Web Design",
   base: "/mock-ui/",
 
   vite: {
-    plugins: [
-      react(),
-      tailwindcss(),
-    ],
+    plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': resolve(__dirname, '../../src'),
+        "@": resolve(__dirname, "../../src"),
       },
-    }
+    },
   },
 
   markdown: {
@@ -68,17 +67,16 @@ export default defineConfig({
 
   themeConfig: {
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Components', link: '/components/' },
+      { text: "Home", link: "/" },
+      { text: "Components", link: "/components/" },
     ],
     sidebar: {
-      '/components/': [
+      "/components/": [
         {
-          text: 'Components',
-          items: generateSidebarItems('docs/components'),
+          text: "Components",
+          items: generateSidebarItems("docs/components"),
         },
       ],
     },
   },
 })
-
