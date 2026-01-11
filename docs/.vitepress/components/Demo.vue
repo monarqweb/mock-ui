@@ -339,7 +339,7 @@ async function renderDemo() {
 }
 
 .demo-preview {
-  padding: 1.5rem;
+  padding: 5rem;
   background: var(--vp-c-bg);
   border-bottom: 1px solid var(--vp-c-divider);
 }
@@ -347,22 +347,14 @@ async function renderDemo() {
 /* Inside demos, undo unlayered VitePress element resets
 and fall back to the layered Tailwind rules. */
 .vp-doc .demo-sandbox,
-.vp-doc .demo-sandbox * {
+.vp-doc .demo-sandbox :where(*:not(.demo-content)) {
   all: revert-layer;
-}
-
-/* Re-apply only what you need for your demo layout */
-.vp-doc .demo-content {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 60px;
 }
 
 .demo-content {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   min-height: 60px;
 }
 
