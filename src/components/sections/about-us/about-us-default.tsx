@@ -1,5 +1,11 @@
 import * as React from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
 /**
@@ -16,11 +22,11 @@ export interface Feature {
 
 /**
  * AboutUsDefault - Renders an about section with company/person information, image, and feature list.
- * 
+ *
  * This component displays information about a company, team, or individual.
  * It supports a title, description, optional image, and a list of features or highlights.
  * The layout can be configured to show image on left or right side.
- * 
+ *
  * @param {AboutUsDefaultProps} props - Component props
  * @param {string} props.title - Section title (e.g., "About Us")
  * @param {string} [props.description] - Main description text
@@ -29,7 +35,7 @@ export interface Feature {
  * @param {Feature[]} [props.features] - Array of feature items to display
  * @param {"left" | "right"} [props.imagePosition] - Position of the image relative to content
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <AboutUsDefault
@@ -70,7 +76,7 @@ export function AboutUsDefault({
   className,
 }: AboutUsDefaultProps) {
   return (
-    <section className={cn("py-16 px-4", className)}>
+    <section className={cn("px-4 py-16", className)}>
       <div className="mx-auto max-w-7xl">
         <div
           className={cn(
@@ -102,14 +108,16 @@ export function AboutUsDefault({
               {title}
             </h2>
             {description && (
-              <p className="text-lg text-muted-foreground">{description}</p>
+              <p className="text-muted-foreground text-lg">{description}</p>
             )}
             {features.length > 0 && (
               <div className="grid gap-4 sm:grid-cols-2">
                 {features.map((feature) => (
                   <Card key={feature.title}>
                     <CardHeader>
-                      {feature.icon && <div className="mb-2">{feature.icon}</div>}
+                      {feature.icon && (
+                        <div className="mb-2">{feature.icon}</div>
+                      )}
                       <CardTitle className="text-lg">{feature.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -125,4 +133,3 @@ export function AboutUsDefault({
     </section>
   )
 }
-

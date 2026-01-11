@@ -40,11 +40,11 @@ export interface SocialLink {
 
 /**
  * FooterDefault - Renders a footer section with links, social media, and copyright information.
- * 
+ *
  * This component displays a comprehensive footer typically found at the bottom of websites.
  * It supports multiple columns of links, social media links, copyright text, and optional logo.
  * The number of columns and links is determined by the arrays provided.
- * 
+ *
  * @param {FooterDefaultProps} props - Component props
  * @param {FooterColumn[]} [props.columns] - Array of footer columns, each containing a title and links
  * @param {SocialLink[]} [props.socialLinks] - Array of social media links to display
@@ -52,7 +52,7 @@ export interface SocialLink {
  * @param {string} [props.logoUrl] - Optional logo image URL
  * @param {string} [props.logoAlt] - Alt text for the logo
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <FooterDefault
@@ -91,7 +91,7 @@ export function FooterDefault({
   className,
 }: FooterDefaultProps) {
   return (
-    <footer className={cn("border-t bg-background", className)}>
+    <footer className={cn("bg-background border-t", className)}>
       <div className="mx-auto max-w-7xl px-4 py-12">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {logoUrl && (
@@ -108,7 +108,7 @@ export function FooterDefault({
                     <a
                       href={link.href}
                       target={link.target}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      className="text-muted-foreground hover:text-foreground text-sm transition-colors"
                     >
                       {link.label}
                     </a>
@@ -121,7 +121,7 @@ export function FooterDefault({
         <Separator className="my-8" />
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           {copyright && (
-            <p className="text-sm text-muted-foreground">{copyright}</p>
+            <p className="text-muted-foreground text-sm">{copyright}</p>
           )}
           {socialLinks.length > 0 && (
             <div className="flex gap-4">
@@ -143,4 +143,3 @@ export function FooterDefault({
     </footer>
   )
 }
-

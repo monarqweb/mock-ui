@@ -1,32 +1,56 @@
 # Chart
 
-Chart component from shadcn/ui.
-
-## Import
-
-```tsx
-import { ChartConfig } from "@/components/ui/chart"
-```
+Beautiful charts. Built using Recharts. Copy and paste into your apps.
 
 ## Usage
 
 ### Basic Usage
 
-```tsx
-<ChartConfig>Content</ChartConfig>
+```tsx demo
+import { Bar, BarChart } from "recharts"
+
+import {
+  ChartContainer,
+  type ChartConfig,
+} from "@/components/ui/chart"
+
+const chartData = [
+  { month: "January", desktop: 186, mobile: 80 },
+  { month: "February", desktop: 305, mobile: 200 },
+  { month: "March", desktop: 237, mobile: 120 },
+  { month: "April", desktop: 73, mobile: 190 },
+  { month: "May", desktop: 209, mobile: 130 },
+  { month: "June", desktop: 214, mobile: 140 },
+]
+
+const chartConfig = {
+  desktop: {
+    label: "Desktop",
+    color: "#2563eb",
+  },
+  mobile: {
+    label: "Mobile",
+    color: "#60a5fa",
+  },
+} satisfies ChartConfig
+
+export function Component() {
+  return (
+    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+      <BarChart accessibilityLayer data={chartData}>
+        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+      </BarChart>
+    </ChartContainer>
+  )
+}
+
 ```
 
 ## Props
 
-See the component source file for full TypeScript prop definitions:
-`src/components/ui/chart.tsx`
+See the [component source file](https://github.com/monarqweb/mock-ui/blob/main/src/components/ui/chart.tsx) for full TypeScript prop definitions.
 
 ## Examples
 
 For detailed examples, refer to the [shadcn/ui documentation](https://ui.shadcn.com/docs/components/chart).
-
-## Source
-
-```tsx:src/components/ui/chart.tsx
-// See src/components/ui/chart.tsx for the full implementation
-```

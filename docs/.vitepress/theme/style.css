@@ -1,0 +1,33 @@
+@import "../../../src/index.css";
+@import "tailwindcss";
+
+/* Scan docs markdown + VitePress theme files */
+@source "../../**/*.{md,mdx,vue,js,ts,jsx,tsx}";
+
+/* Scan your React component library */
+@source "../../../src/**/*.{js,ts,jsx,tsx}";
+
+/* Prevent VitePress from overriding Radix UI portal styles */
+[data-radix-portal],
+[data-radix-portal] * {
+  all: revert-layer;
+}
+
+[data-slot="alert-dialog-overlay"],
+[data-slot="alert-dialog-content"],
+[data-slot="alert-dialog-overlay"] *,
+[data-slot="alert-dialog-content"] *,
+[data-slot="dialog-overlay"],
+[data-slot="dialog-content"],
+[data-slot="dialog-overlay"] *,
+[data-slot="dialog-content"] *,
+[data-slot="popover-overlay"],
+[data-slot="popover-content"],
+[data-slot="popover-overlay"] *,
+[data-slot="popover-content"] *,
+[data-slot="sheet-overlay"],
+[data-slot="sheet-content"],
+[data-slot="sheet-overlay"] *,
+[data-slot="sheet-content"] * {
+  all: revert-layer;
+}

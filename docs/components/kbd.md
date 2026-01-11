@@ -1,32 +1,38 @@
 # Kbd
 
-Kbd component from shadcn/ui.
-
-## Import
-
-```tsx
-import { Kbd } from "@/components/ui/kbd"
-```
+Used to display textual user input from keyboard.
 
 ## Usage
 
 ### Basic Usage
 
-```tsx
-<Kbd>Content</Kbd>
+```tsx demo
+import { Kbd, KbdGroup } from "@/components/ui/kbd"
+
+export function KbdDemo() {
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <KbdGroup>
+        <Kbd>⌘</Kbd>
+        <Kbd>⇧</Kbd>
+        <Kbd>⌥</Kbd>
+        <Kbd>⌃</Kbd>
+      </KbdGroup>
+      <KbdGroup>
+        <Kbd>Ctrl</Kbd>
+        <span>+</span>
+        <Kbd>B</Kbd>
+      </KbdGroup>
+    </div>
+  )
+}
 ```
 
 ## Props
 
-See the component source file for full TypeScript prop definitions:
-`src/components/ui/kbd.tsx`
+See the [component source file](https://github.com/monarqweb/mock-ui/blob/main/src/components/ui/kbd.tsx) for full TypeScript prop definitions.
 
 ## Examples
 
 For detailed examples, refer to the [shadcn/ui documentation](https://ui.shadcn.com/docs/components/kbd).
 
-## Source
-
-```tsx:src/components/ui/kbd.tsx
-// See src/components/ui/kbd.tsx for the full implementation
-```

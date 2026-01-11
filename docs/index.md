@@ -33,4 +33,3 @@ All components use Tailwind CSS v4 and support dark mode. Theme variables are co
 - [shadcn/ui Official Docs](https://ui.shadcn.com)
 - [Radix UI Primitives](https://www.radix-ui.com)
 - [Tailwind CSS](https://tailwindcss.com)
-

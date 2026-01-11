@@ -1,32 +1,80 @@
 # Command
 
-Command component from shadcn/ui.
-
-## Import
-
-```tsx
-import { Command } from "@/components/ui/command"
-```
+Fast, composable, unstyled command menu for React.
 
 ## Usage
 
 ### Basic Usage
 
-```tsx
-<Command>Content</Command>
+```tsx demo
+import {
+  Calculator,
+  Calendar,
+  CreditCard,
+  Settings,
+  Smile,
+  User,
+} from "lucide-react"
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command"
+
+export function CommandDemo() {
+  return (
+    <Command className="rounded-lg border shadow-md md:min-w-[450px]">
+      <CommandInput placeholder="Type a command or search..." />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup heading="Suggestions">
+          <CommandItem>
+            <Calendar />
+            <span>Calendar</span>
+          </CommandItem>
+          <CommandItem>
+            <Smile />
+            <span>Search Emoji</span>
+          </CommandItem>
+          <CommandItem disabled>
+            <Calculator />
+            <span>Calculator</span>
+          </CommandItem>
+        </CommandGroup>
+        <CommandSeparator />
+        <CommandGroup heading="Settings">
+          <CommandItem>
+            <User />
+            <span>Profile</span>
+            <CommandShortcut>⌘P</CommandShortcut>
+          </CommandItem>
+          <CommandItem>
+            <CreditCard />
+            <span>Billing</span>
+            <CommandShortcut>⌘B</CommandShortcut>
+          </CommandItem>
+          <CommandItem>
+            <Settings />
+            <span>Settings</span>
+            <CommandShortcut>⌘S</CommandShortcut>
+          </CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  )
+}
 ```
 
 ## Props
 
-See the component source file for full TypeScript prop definitions:
-`src/components/ui/command.tsx`
+See the [component source file](https://github.com/monarqweb/mock-ui/blob/main/src/components/ui/command.tsx) for full TypeScript prop definitions.
 
 ## Examples
 
 For detailed examples, refer to the [shadcn/ui documentation](https://ui.shadcn.com/docs/components/command).
-
-## Source
-
-```tsx:src/components/ui/command.tsx
-// See src/components/ui/command.tsx for the full implementation
-```

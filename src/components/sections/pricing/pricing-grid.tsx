@@ -8,18 +8,18 @@ export type PricingPlan = Omit<PricingCardProps, "className">
 
 /**
  * PricingGrid - Renders a pricing section with multiple pricing plan cards in a grid layout.
- * 
+ *
  * This component displays a title, description, and a grid of pricing plan cards.
  * The number of cards is determined by the length of the `plans` array.
  * Card rendering uses the PricingCard sub-component from the utils directory.
- * 
+ *
  * @param {PricingGridProps} props - Component props
  * @param {string} [props.title] - Section title
  * @param {string} [props.description] - Section description
  * @param {PricingPlan[]} props.plans - Array of pricing plan objects
  * @param {number} [props.columns] - Number of columns in the grid (default: 3)
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <PricingGrid
@@ -54,7 +54,7 @@ export function PricingGrid({
   className,
 }: PricingGridProps) {
   return (
-    <section className={cn("py-16 px-4", className)}>
+    <section className={cn("px-4 py-16", className)}>
       <div className="mx-auto max-w-7xl">
         {(title || description) && (
           <div className="mb-12 text-center">
@@ -64,7 +64,9 @@ export function PricingGrid({
               </h2>
             )}
             {description && (
-              <p className="mt-4 text-lg text-muted-foreground">{description}</p>
+              <p className="text-muted-foreground mt-4 text-lg">
+                {description}
+              </p>
             )}
           </div>
         )}
@@ -85,4 +87,3 @@ export function PricingGrid({
     </section>
   )
 }
-

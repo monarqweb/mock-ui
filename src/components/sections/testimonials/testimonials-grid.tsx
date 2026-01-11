@@ -1,5 +1,8 @@
 import { cn } from "@/lib/utils"
-import { TestimonialCard, type TestimonialCardProps } from "./utils/testimonial-card"
+import {
+  TestimonialCard,
+  type TestimonialCardProps,
+} from "./utils/testimonial-card"
 
 /**
  * Testimonial - Represents a testimonial configuration.
@@ -8,18 +11,18 @@ export type Testimonial = TestimonialCardProps
 
 /**
  * TestimonialsGrid - Renders a testimonials section with a grid of testimonial cards.
- * 
+ *
  * This component displays a title, description, and a grid of customer testimonial cards.
  * The number of testimonial cards is determined by the length of the `testimonials` array.
  * Card rendering uses the TestimonialCard sub-component from the utils directory.
- * 
+ *
  * @param {TestimonialsGridProps} props - Component props
  * @param {string} [props.title] - Section title
  * @param {string} [props.description] - Section description
  * @param {Testimonial[]} props.testimonials - Array of testimonial objects
  * @param {number} [props.columns] - Number of columns in the grid (default: 3)
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <TestimonialsGrid
@@ -57,7 +60,7 @@ export function TestimonialsGrid({
   className,
 }: TestimonialsGridProps) {
   return (
-    <section className={cn("py-16 px-4", className)}>
+    <section className={cn("px-4 py-16", className)}>
       <div className="mx-auto max-w-7xl">
         {(title || description) && (
           <div className="mb-12 text-center">
@@ -67,7 +70,9 @@ export function TestimonialsGrid({
               </h2>
             )}
             {description && (
-              <p className="mt-4 text-lg text-muted-foreground">{description}</p>
+              <p className="text-muted-foreground mt-4 text-lg">
+                {description}
+              </p>
             )}
           </div>
         )}
@@ -91,4 +96,3 @@ export function TestimonialsGrid({
     </section>
   )
 }
-

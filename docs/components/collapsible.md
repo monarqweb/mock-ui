@@ -1,32 +1,62 @@
 # Collapsible
 
-Collapsible component from shadcn/ui.
-
-## Import
-
-```tsx
-import { Collapsible } from "@/components/ui/collapsible"
-```
+An interactive component which expands/collapses a panel.
 
 ## Usage
 
 ### Basic Usage
 
-```tsx
-<Collapsible>Content</Collapsible>
+```tsx demo
+import * as React from "react"
+import { ChevronsUpDown } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+
+export function CollapsibleDemo() {
+  const [isOpen, setIsOpen] = React.useState(false)
+
+  return (
+    <Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      className="flex w-[350px] flex-col gap-2"
+    >
+      <div className="flex items-center justify-between gap-4 px-4">
+        <h4 className="text-sm font-semibold">
+          @peduarte starred 3 repositories
+        </h4>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" size="icon" className="size-8">
+            <ChevronsUpDown />
+            <span className="sr-only">Toggle</span>
+          </Button>
+        </CollapsibleTrigger>
+      </div>
+      <div className="rounded-md border px-4 py-2 font-mono text-sm">
+        @radix-ui/primitives
+      </div>
+      <CollapsibleContent className="flex flex-col gap-2">
+        <div className="rounded-md border px-4 py-2 font-mono text-sm">
+          @radix-ui/colors
+        </div>
+        <div className="rounded-md border px-4 py-2 font-mono text-sm">
+          @stitches/react
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  )
+}
 ```
 
 ## Props
 
-See the component source file for full TypeScript prop definitions:
-`src/components/ui/collapsible.tsx`
+See the [component source file](https://github.com/monarqweb/mock-ui/blob/main/src/components/ui/collapsible.tsx) for full TypeScript prop definitions.
 
 ## Examples
 
 For detailed examples, refer to the [shadcn/ui documentation](https://ui.shadcn.com/docs/components/collapsible).
-
-## Source
-
-```tsx:src/components/ui/collapsible.tsx
-// See src/components/ui/collapsible.tsx for the full implementation
-```

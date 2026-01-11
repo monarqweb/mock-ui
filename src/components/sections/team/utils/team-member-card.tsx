@@ -36,7 +36,7 @@ export interface TeamMemberCardProps {
 
 /**
  * TeamMemberCard - Renders an individual team member card.
- * 
+ *
  * This component displays a team member with name, title, bio, avatar, and social links.
  */
 export function TeamMemberCard({
@@ -83,4 +83,3 @@ export function TeamMemberCard({
     </Card>
   )
 }
-

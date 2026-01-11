@@ -19,11 +19,11 @@ export interface NavigationLink {
 
 /**
  * NavigationDefault - Renders a header/navigation bar with logo, links, and CTA button.
- * 
+ *
  * This component displays a responsive navigation bar typically found at the top of websites.
  * It supports a logo, array of navigation links, optional CTA button, and mobile menu toggle.
  * The navigation links are rendered from the provided array.
- * 
+ *
  * @param {NavigationDefaultProps} props - Component props
  * @param {string} [props.logoUrl] - Logo image URL
  * @param {string} [props.logoAlt] - Alt text for the logo
@@ -34,7 +34,7 @@ export interface NavigationLink {
  * @param {Function} [props.onCtaClick] - CTA button onClick handler
  * @param {boolean} [props.sticky] - Whether the navigation should be sticky (default: true)
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <NavigationDefault
@@ -86,7 +86,7 @@ export function NavigationDefault({
   return (
     <nav
       className={cn(
-        "border-b bg-background",
+        "bg-background border-b",
         sticky && "sticky top-0 z-50",
         className
       )}
@@ -114,10 +114,8 @@ export function NavigationDefault({
                 href={link.href}
                 target={link.target}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-foreground",
-                  link.active
-                    ? "text-foreground"
-                    : "text-muted-foreground"
+                  "hover:text-foreground text-sm font-medium transition-colors",
+                  link.active ? "text-foreground" : "text-muted-foreground"
                 )}
               >
                 {link.label}
@@ -133,11 +131,7 @@ export function NavigationDefault({
                 onClick={onCtaClick}
                 asChild={!!ctaHref}
               >
-                {ctaHref ? (
-                  <a href={ctaHref}>{ctaLabel}</a>
-                ) : (
-                  ctaLabel
-                )}
+                {ctaHref ? <a href={ctaHref}>{ctaLabel}</a> : ctaLabel}
               </Button>
             )}
           </div>
@@ -166,10 +160,8 @@ export function NavigationDefault({
                   href={link.href}
                   target={link.target}
                   className={cn(
-                    "block text-base font-medium transition-colors hover:text-foreground",
-                    link.active
-                      ? "text-foreground"
-                      : "text-muted-foreground"
+                    "hover:text-foreground block text-base font-medium transition-colors",
+                    link.active ? "text-foreground" : "text-muted-foreground"
                   )}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -186,11 +178,7 @@ export function NavigationDefault({
                   }}
                   asChild={!!ctaHref}
                 >
-                  {ctaHref ? (
-                    <a href={ctaHref}>{ctaLabel}</a>
-                  ) : (
-                    ctaLabel
-                  )}
+                  {ctaHref ? <a href={ctaHref}>{ctaLabel}</a> : ctaLabel}
                 </Button>
               )}
             </div>
@@ -200,4 +188,3 @@ export function NavigationDefault({
     </nav>
   )
 }
-

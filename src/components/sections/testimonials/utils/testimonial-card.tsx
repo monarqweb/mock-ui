@@ -1,4 +1,3 @@
-import * as React from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
@@ -26,7 +25,7 @@ export interface TestimonialCardProps {
 
 /**
  * TestimonialCard - Renders an individual testimonial card.
- * 
+ *
  * This component displays a customer testimonial with quote, author information, and optional rating.
  */
 export function TestimonialCard({
@@ -83,4 +82,3 @@ export function TestimonialCard({
     </Card>
   )
 }
-

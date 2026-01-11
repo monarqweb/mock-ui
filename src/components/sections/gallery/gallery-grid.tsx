@@ -19,11 +19,11 @@ export interface GalleryImage {
 
 /**
  * GalleryGrid - Renders a gallery section with a grid of images.
- * 
+ *
  * This component displays a title, description, and a grid of images.
  * The number of images is determined by the length of the `images` array.
  * Each image can include a caption and optional link/onClick handler.
- * 
+ *
  * @param {GalleryGridProps} props - Component props
  * @param {string} [props.title] - Section title
  * @param {string} [props.description] - Section description
@@ -32,7 +32,7 @@ export interface GalleryImage {
  * @param {"square" | "landscape" | "portrait" | "auto"} [props.aspectRatio] - Image aspect ratio (default: "square")
  * @param {boolean} [props.showCaptions] - Whether to show image captions (default: true)
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <GalleryGrid
@@ -109,7 +109,7 @@ export function GalleryGrid({
   }
 
   return (
-    <section className={cn("py-16 px-4", className)}>
+    <section className={cn("px-4 py-16", className)}>
       <div className="mx-auto max-w-7xl">
         {(title || description) && (
           <div className="mb-12 text-center">
@@ -119,7 +119,9 @@ export function GalleryGrid({
               </h2>
             )}
             {description && (
-              <p className="mt-4 text-lg text-muted-foreground">{description}</p>
+              <p className="text-muted-foreground mt-4 text-lg">
+                {description}
+              </p>
             )}
           </div>
         )}
@@ -161,4 +163,3 @@ export function GalleryGrid({
     </section>
   )
 }
-

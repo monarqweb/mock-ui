@@ -4,7 +4,10 @@ export type { HeroCenteredProps, CTAButton } from "./hero/hero-centered"
 
 // About sections
 export { AboutUsDefault } from "./about-us/about-us-default"
-export type { AboutUsDefaultProps, Feature as AboutFeature } from "./about-us/about-us-default"
+export type {
+  AboutUsDefaultProps,
+  Feature as AboutFeature,
+} from "./about-us/about-us-default"
 
 // Footer sections
 export { FooterDefault } from "./footer/footer-default"
@@ -30,7 +33,10 @@ export type { FeaturesGridProps, Feature } from "./features/features-grid"
 
 // Testimonials sections
 export { TestimonialsGrid } from "./testimonials/testimonials-grid"
-export type { TestimonialsGridProps, Testimonial } from "./testimonials/testimonials-grid"
+export type {
+  TestimonialsGridProps,
+  Testimonial,
+} from "./testimonials/testimonials-grid"
 export { TestimonialCard } from "./testimonials/utils/testimonial-card"
 export type { TestimonialCardProps } from "./testimonials/utils/testimonial-card"
 
@@ -61,7 +67,10 @@ export type { StatsGridProps, Stat } from "./stats/stats-grid"
 
 // CTA sections
 export { CTADefault } from "./cta/cta-default"
-export type { CTADefaultProps, CTAButton as CTASectionButton } from "./cta/cta-default"
+export type {
+  CTADefaultProps,
+  CTAButton as CTASectionButton,
+} from "./cta/cta-default"
 
 // Navigation sections
 export { NavigationDefault } from "./navigation/navigation-default"
@@ -79,4 +88,3 @@ export { BlogGrid } from "./blog/blog-grid"
 export type { BlogGridProps, BlogPost } from "./blog/blog-grid"
 export { BlogCard } from "./blog/utils/blog-card"
 export type { BlogCardProps } from "./blog/utils/blog-card"
-

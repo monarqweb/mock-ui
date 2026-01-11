@@ -2,18 +2,14 @@
 
 Button component from shadcn/ui.
 
-## Import
-
-```tsx
-import { Button } from "@/components/ui/button"
-```
-
 ## Usage
 
 ### Basic Usage
 
-```tsx
-<Button>Content</Button>
+```tsx demo
+import { Button } from "@/components/ui/button"
+
+<Button onClick={() => alert("Clicked")}>Click me</Button>
 ```
 
 ### Variants
@@ -35,6 +31,6 @@ For detailed examples, refer to the [shadcn/ui documentation](https://ui.shadcn.
 
 ## Source
 
-```tsx:src/components/ui/button.tsx
+```tsx
 // See src/components/ui/button.tsx for the full implementation
 ```
