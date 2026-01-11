@@ -17,6 +17,10 @@
 [data-slot="alert-dialog-overlay"],
 [data-slot="alert-dialog-content"],
 [data-slot="alert-dialog-overlay"] *,
-[data-slot="alert-dialog-content"] * {
+[data-slot="alert-dialog-content"] *,
+[data-slot="dialog-overlay"],
+[data-slot="dialog-content"],
+[data-slot="dialog-overlay"] *,
+[data-slot="dialog-content"] * {
   all: revert-layer;
 }
