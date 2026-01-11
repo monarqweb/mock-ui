@@ -357,13 +357,17 @@ async function renderDemo() {
   margin: 1.5rem 0;
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
-  overflow: hidden;
 }
 
+
 .demo-preview {
-  padding: 5rem;
+  position: relative;
+  z-index: 1;
+  padding: 5rem 1.5rem;
   background: var(--vp-c-bg);
   border-bottom: 1px solid var(--vp-c-divider);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 /* Inside demos, undo unlayered VitePress element resets
@@ -381,6 +385,8 @@ and fall back to the layered Tailwind rules. */
 }
 
 .demo-code {
+  position: relative;
+  z-index: 0;
   margin-top: -1px;
 }
 
