@@ -76,6 +76,12 @@ watch(() => props.code, () => {
 async function renderDemo() {
   if (!containerRef.value) return
 
+  const externalModuleAllowlist: Record<string, () => Promise<any>> = {
+  "react": () => import("react"),
+  "lucide-react": () => import("lucide-react"),
+  // add more as you need
+}
+
   await nextTick()
 
   // Clear previous content
@@ -89,58 +95,147 @@ async function renderDemo() {
     // Use the decoded code
     const code = decodedCode.value
     
-    // Extract imports from the code
-    const importRegex = /import\s+{([^}]+)}\s+from\s+['"]([^'"]+)['"]/g
-    const imports: Array<{ names: string[]; path: string }> = []
+    // Extract imports from the code (named, namespace, and default)
+    type ImportInfo = 
+      | { kind: 'named'; path: string; names: Array<{ local: string; imported?: string }> }
+      | { kind: 'namespace'; path: string; name: string }
+      | { kind: 'default'; path: string; name: string }
+    
+    const imports: ImportInfo[] = []
+    
+    // Named imports: import { A, B as C } from "..."
+    const namedImportRegex = /import\s+{([^}]+)}\s+from\s+['"]([^'"]+)['"]/g
     let match
-    
-    // Reset regex
-    importRegex.lastIndex = 0
-    
-    while ((match = importRegex.exec(code)) !== null) {
-      const names = match[1].split(',').map(s => s.trim())
+    while ((match = namedImportRegex.exec(code)) !== null) {
+      const namesStr = match[1]
       const path = match[2]
-      imports.push({ names, path })
+      const names = namesStr.split(',').map(s => {
+        const trimmed = s.trim()
+        const aliasMatch = trimmed.match(/^(.+?)\s+as\s+(.+)$/)
+        if (aliasMatch) {
+          return { imported: aliasMatch[1].trim(), local: aliasMatch[2].trim() }
+        }
+        return { local: trimmed }
+      })
+      imports.push({ kind: 'named', path, names })
     }
     
-    // Remove imports from the code to get just the JSX
-    const codeWithoutImports = code.replace(importRegex, '').trim()
+    // Namespace imports: import * as Name from "..."
+    const namespaceImportRegex = /import\s+\*\s+as\s+(\w+)\s+from\s+['"]([^'"]+)['"]/g
+    while ((match = namespaceImportRegex.exec(code)) !== null) {
+      imports.push({ kind: 'namespace', path: match[2], name: match[1] })
+    }
+    
+    // Default imports: import Name from "..."
+    const defaultImportRegex = /import\s+(\w+)\s+from\s+['"]([^'"]+)['"]/g
+    while ((match = defaultImportRegex.exec(code)) !== null) {
+      imports.push({ kind: 'default', path: match[2], name: match[1] })
+    }
+    
+    // Remove all imports from the code to get just the JSX (use fresh regex instances)
+    const codeWithoutImports = code
+      .replace(/import\s+{([^}]+)}\s+from\s+['"]([^'"]+)['"]/g, '')
+      .replace(/import\s+\*\s+as\s+(\w+)\s+from\s+['"]([^'"]+)['"]/g, '')
+      .replace(/import\s+(\w+)\s+from\s+['"]([^'"]+)['"]/g, '')
+      .trim()
     
     if (!codeWithoutImports) {
       throw new Error('No JSX code found in demo')
     }
     
-    // Dynamically import all required modules
+    // Detect if this is a module-style demo (has exports)
+    const hasExports = /export\s+(?:default\s+)?(?:function|const|class|\w+)/.test(codeWithoutImports)
+    
+    // Dynamically import all required modules (collect unique paths)
     const importedModules: Record<string, any> = {}
-    for (const { path } of imports) {
-      if (!importedModules[path]) {
-        if (path.startsWith('@/components/ui/')) {
-          const componentName = path.replace('@/components/ui/', '').replace(/\.tsx$/, '')
-          try {
-            importedModules[path] = await import(`@/components/ui/${componentName}.tsx`)
-          } catch (importError: any) {
-            throw new Error(`Failed to import from ${path}: ${importError.message}`)
-          }
-        } else {
-          throw new Error(`Cannot resolve import: ${path}. Only @/components/ui/* imports are supported.`)
-        }
+    const uniquePaths = new Set(imports.map(imp => imp.path))
+    
+    for (const path of uniquePaths) {
+      if (path.startsWith('@/components/ui/')) {
+        const componentName = path.replace('@/components/ui/', '').replace(/\.tsx$/, '')
+        importedModules[path] = await import(`@/components/ui/${componentName}.tsx`)
+        continue
       }
+
+      const loader = externalModuleAllowlist[path]
+      if (loader) {
+        importedModules[path] = await loader()
+        continue
+      }
+
+      throw new Error(
+        `Cannot resolve import: ${path}. Allowed: @/components/ui/* and ${Object.keys(externalModuleAllowlist).join(", ")}`
+      )
     }
     
     // Build the imports context
     const importsContext: Record<string, any> = {}
-    for (const { names, path } of imports) {
-      const module = importedModules[path]
-      for (const name of names) {
-        if (!(name in module)) {
-          throw new Error(`Export "${name}" not found in ${path}`)
+    for (const imp of imports) {
+      const module = importedModules[imp.path]
+      
+      if (imp.kind === 'named') {
+        for (const { local, imported } of imp.names) {
+          const exportName = imported || local
+          if (!(exportName in module)) {
+            throw new Error(`Export "${exportName}" not found in ${imp.path}`)
+          }
+          importsContext[local] = module[exportName]
         }
-        importsContext[name] = module[name]
+      } else if (imp.kind === 'namespace') {
+        importsContext[imp.name] = module
+      } else if (imp.kind === 'default') {
+        if (!('default' in module)) {
+          throw new Error(`Default export not found in ${imp.path}`)
+        }
+        importsContext[imp.name] = module.default
+      }
+    }
+    
+    // Rewrite exports to use exports object if module-style
+    let codeToTransform = codeWithoutImports
+    const exportsToAdd: string[] = []
+    
+    if (hasExports) {
+      // export default function Name(...) { ... }
+      codeToTransform = codeToTransform.replace(
+        /export\s+default\s+function\s+(\w+)/g,
+        (match, name) => {
+          exportsToAdd.push(`exports.default = ${name};`)
+          return `function ${name}`
+        }
+      )
+      // export function Name(...) { ... }
+      codeToTransform = codeToTransform.replace(
+        /export\s+function\s+(\w+)/g,
+        (match, name) => {
+          exportsToAdd.push(`exports.${name} = ${name};`)
+          return `function ${name}`
+        }
+      )
+      // export const Name = ...
+      codeToTransform = codeToTransform.replace(
+        /export\s+const\s+(\w+)/g,
+        (match, name) => {
+          exportsToAdd.push(`exports.${name} = ${name};`)
+          return `const ${name}`
+        }
+      )
+      // export default Name (standalone, after a definition)
+      codeToTransform = codeToTransform.replace(
+        /export\s+default\s+(\w+)\s*;?/g,
+        (match, name) => {
+          exportsToAdd.push(`exports.default = ${name};`)
+          return ''
+        }
+      )
+      // Append all exports at the end
+      if (exportsToAdd.length > 0) {
+        codeToTransform = codeToTransform + '\n' + exportsToAdd.join('\n')
       }
     }
     
     // Transform JSX to React.createElement calls using Babel
-    let transformedCode = codeWithoutImports
+    let transformedCode = codeToTransform
     try {
       const result = transform(transformedCode, {
         presets: ['react'],
@@ -150,22 +245,73 @@ async function renderDemo() {
       throw new Error(`JSX transformation failed: ${transformError.message}`)
     }
     
-    // Wrap in return statement if not already returning
-    if (!transformedCode.trim().startsWith('return')) {
-      transformedCode = `return ${transformedCode}`
-    }
-    
     // Create eval function with imports in scope
     const importKeys = Object.keys(importsContext)
     const importValues = importKeys.map(key => importsContext[key])
     
-    const evalCode = new Function(
-      'React',
-      ...importKeys,
-      transformedCode
-    )
+    let element: any
     
-    const element = evalCode(React, ...importValues)
+    if (hasExports) {
+      // Module-style: evaluate with exports object
+      const exports: Record<string, any> = {}
+      const evalCode = new Function(
+        'React',
+        ...importKeys,
+        'exports',
+        transformedCode + '; return exports;'
+      )
+      
+      const exportsObj = evalCode(React, ...importValues, exports)
+      
+      // Choose component to render based on priority
+      let component: any = null
+      
+      // 1. default export
+      if (exportsObj.default) {
+        component = exportsObj.default
+      }
+      // 2. named export "Demo"
+      else if (exportsObj.Demo) {
+        component = exportsObj.Demo
+      }
+      // 3. first named export ending with "Demo"
+      else {
+        const demoExports = Object.keys(exportsObj).filter(k => k.endsWith('Demo'))
+        if (demoExports.length > 0) {
+          component = exportsObj[demoExports[0]]
+        }
+      }
+      // 4. if exactly one export, use it
+      if (!component) {
+        const exportKeys = Object.keys(exportsObj).filter(k => k !== 'default')
+        if (exportKeys.length === 1) {
+          component = exportsObj[exportKeys[0]]
+        }
+      }
+      
+      if (!component) {
+        const allExports = Object.keys(exportsObj).filter(k => k !== 'default')
+        throw new Error(
+          `No suitable export found for module-style demo. Found exports: ${allExports.length > 0 ? allExports.join(', ') : 'none'}. ` +
+          `Please export a component named "Demo" or ending with "Demo", or provide exactly one named export.`
+        )
+      }
+      
+      element = React.createElement(component)
+    } else {
+      // Expression-style: wrap in return statement if not already returning
+      if (!transformedCode.trim().startsWith('return')) {
+        transformedCode = `return ${transformedCode}`
+      }
+      
+      const evalCode = new Function(
+        'React',
+        ...importKeys,
+        transformedCode
+      )
+      
+      element = evalCode(React, ...importValues)
+    }
     
     if (!element) {
       throw new Error('Demo code did not return a valid React element')
