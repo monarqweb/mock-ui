@@ -1,6 +1,6 @@
 import { defineConfig } from "vitepress"
 import { readdirSync } from "fs"
-import { join, resolve } from "path"
+import { join, resolve, basename } from "path"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
 import { demoPlugin } from "./plugins/demo"
@@ -25,6 +25,8 @@ function generateSidebarItems(
   basePath: string
 ): Array<{ text: string; link: string }> {
   const componentsPath = join(process.cwd(), basePath)
+  // Extract the directory name from basePath (e.g., "components" from "docs/components")
+  const dirName = basename(basePath)
   const files = readdirSync(componentsPath)
     .filter((file) => file.endsWith(".md"))
     .sort((a, b) => {
@@ -37,7 +39,7 @@ function generateSidebarItems(
 
   return files.map((file) => {
     const name = file.replace(/\.md$/, "")
-    const link = name === "index" ? "/components/" : `/components/${name}`
+    const link = name === "index" ? `/${dirName}/` : `/${dirName}/${name}`
     return {
       text: filenameToTitle(file),
       link,
