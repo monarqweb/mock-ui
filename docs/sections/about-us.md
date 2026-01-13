@@ -1,3 +1,7 @@
+---
+aside: false
+---
+
 # About us
 
 Renders an about section with company/person information, image, and feature list.
