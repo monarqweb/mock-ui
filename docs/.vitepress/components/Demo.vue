@@ -206,6 +206,22 @@ async function renderDemo() {
         continue
       }
 
+      if (path.startsWith("@/components/sections/")) {
+        const componentName = path
+          .replace("@/components/sections/", "")
+          .replace(/\.tsx$/, "")
+        // If path has multiple levels (e.g., "about-us/about-us-default"),
+        // use the barrel export instead since Vite dynamic imports only support one level
+        if (componentName.includes("/")) {
+          importedModules[path] = await import(`@/components/sections`)
+        } else {
+          importedModules[path] = await import(
+            `@/components/sections/${componentName}.tsx`
+          )
+        }
+        continue
+      }
+
       if (path.startsWith("@/lib/")) {
         const filename = path.replace("@/lib/", "").replace(/\.ts$/, "")
         importedModules[path] = await import(`@/lib/${filename}.ts`)
