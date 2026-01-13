@@ -71,12 +71,19 @@ export default defineConfig({
     nav: [
       { text: "Home", link: "/" },
       { text: "Components", link: "/components/" },
+      { text: "Sections", link: "/sections/" },
     ],
     sidebar: {
       "/components/": [
         {
           text: "Components",
           items: generateSidebarItems("docs/components"),
+        },
+      ],
+      "/sections/": [
+        {
+          text: "Sections",
+          items: generateSidebarItems("docs/sections"),
         },
       ],
     },
