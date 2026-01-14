@@ -2,7 +2,6 @@
 
 <!-- Provide a brief description of what this PR accomplishes and why it's needed -->
 
-
 [ClickUp Ticket](link-to-ticket)
 
 ## Summary of Changes

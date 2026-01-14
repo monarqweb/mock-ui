@@ -137,7 +137,10 @@ function addImport(content, componentName) {
     }
 
     // Add component to existing import
-    const importItems = importsList.split(",").map((i) => i.trim()).filter(Boolean)
+    const importItems = importsList
+      .split(",")
+      .map((i) => i.trim())
+      .filter(Boolean)
     importItems.push(componentName)
     // Sort imports alphabetically
     importItems.sort()
@@ -236,13 +239,10 @@ function formatFile(filePath) {
   try {
     // Use biome check with organizeImports and formatter
     const relativePath = filePath.replace(rootDir + "/", "")
-    execSync(
-      `biome check --write ${relativePath}`,
-      {
-        cwd: rootDir,
-        stdio: "inherit",
-      }
-    )
+    execSync(`biome check --write ${relativePath}`, {
+      cwd: rootDir,
+      stdio: "inherit",
+    })
   } catch (error) {
     console.warn(`Warning: Biome formatting failed: ${error.message}`)
     console.warn("File was still updated, but may need manual formatting")
