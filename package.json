@@ -18,7 +18,8 @@
     "docs:preview": "vitepress preview docs",
     "docs:generate": "node scripts/generate-component-docs.mjs",
     "sections:generate": "node scripts/generate-section-registry.mjs",
-    "section:add": "node scripts/add-section.mjs"
+    "section:add": "node scripts/add-section.mjs",
+    "export:html": "vite build && echo 'HTML export generated in dist/index.html'"
   },
   "dependencies": {
     "@base-ui/react": "1.0.0-rc.2",
