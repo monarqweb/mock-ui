@@ -237,7 +237,7 @@ function formatFile(filePath) {
     // Use biome check with organizeImports and formatter
     const relativePath = filePath.replace(rootDir + "/", "")
     execSync(
-      `biome check --write --only=organizeImports,formatter ${relativePath}`,
+      `biome check --write ${relativePath}`,
       {
         cwd: rootDir,
         stdio: "inherit",
