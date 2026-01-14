@@ -2,11 +2,10 @@ import puppeteer from "puppeteer"
 import { readFileSync, writeFileSync } from "fs"
 import { join, dirname } from "path"
 import { fileURLToPath } from "url"
-import { createServer, get } from "http"
+import { spawn } from "child_process"
 import { readdirSync, statSync } from "fs"
-import { createReadStream } from "fs"
 import { extname } from "path"
-import { createServer as createNetServer } from "net"
+import { get } from "http"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -21,40 +20,6 @@ function findAssetFile(extension) {
   const files = readdirSync(assetsDir)
   const file = files.find(f => extname(f) === extension)
   return file ? join(assetsDir, file) : null
-}
-
-// Check if a port is available
-function isPortAvailable(port) {
-  return new Promise((resolve) => {
-    const server = createNetServer()
-    
-    server.once("error", (err) => {
-      if (err.code === "EADDRINUSE") {
-        resolve(false)
-      } else {
-        resolve(false)
-      }
-    })
-    
-    server.once("listening", () => {
-      server.once("close", () => resolve(true))
-      server.close()
-    })
-    
-    server.listen(port)
-  })
-}
-
-// Find an available port starting from startPort
-async function findAvailablePort(startPort = 3000, maxAttempts = 10) {
-  for (let i = 0; i < maxAttempts; i++) {
-    const port = startPort + i
-    const available = await isPortAvailable(port)
-    if (available) {
-      return port
-    }
-  }
-  throw new Error(`Could not find an available port after ${maxAttempts} attempts`)
 }
 
 // Wait for server to be ready by making a test request
@@ -92,58 +57,57 @@ async function waitForServer(port, maxRetries = 30, delay = 500) {
   throw new Error(`Server at ${url} did not become ready after ${maxRetries} attempts`)
 }
 
-// Simple HTTP server to serve the built files
-function createLocalServer(port) {
+// Start vite preview and extract the port from output
+function startVitePreview() {
   return new Promise((resolve, reject) => {
-    const server = createServer((req, res) => {
-      let filePath = join(distDir, req.url === "/" ? "index.html" : req.url)
+    console.log("Starting vite preview server...")
+    
+    // Use pnpm to run vite preview (respects packageManager setting)
+    const viteProcess = spawn("pnpm", ["preview", "--host"], {
+      cwd: rootDir,
+      stdio: ["ignore", "pipe", "pipe"],
+      shell: true,
+    })
+    
+    let port = null
+    let outputBuffer = ""
+    
+    const extractPort = (data) => {
+      outputBuffer += data.toString()
+      // Vite preview outputs: "  ➜  Local:   http://localhost:4173/"
+      // or "  ➜  Network: use --host to expose"
+      // Look for "Local:" or "localhost:" followed by port
+      const portMatch = outputBuffer.match(/localhost:(\d+)/i) || 
+                       outputBuffer.match(/Local:\s*http:\/\/[^:]+:(\d+)/i) ||
+                       outputBuffer.match(/:\/\/localhost:(\d+)/i)
       
-      // Handle assets
-      if (req.url.startsWith("/assets/")) {
-        filePath = join(distDir, req.url)
+      if (portMatch && !port) {
+        port = parseInt(portMatch[1], 10)
+        console.log(`✓ Vite preview server started on port ${port}`)
+        resolve({ process: viteProcess, port })
       }
-      
-      try {
-        if (statSync(filePath).isFile()) {
-          const ext = extname(filePath)
-          const contentType = {
-            ".html": "text/html",
-            ".js": "application/javascript",
-            ".css": "text/css",
-            ".svg": "image/svg+xml",
-            ".png": "image/png",
-            ".jpg": "image/jpeg",
-            ".jpeg": "image/jpeg",
-            ".gif": "image/gif",
-            ".woff": "font/woff",
-            ".woff2": "font/woff2",
-            ".ttf": "font/ttf",
-          }[ext] || "application/octet-stream"
-          
-          res.writeHead(200, { "Content-Type": contentType })
-          createReadStream(filePath).pipe(res)
-        } else {
-          res.writeHead(404)
-          res.end("Not found")
-        }
-      } catch (err) {
-        res.writeHead(404)
-        res.end("Not found")
+    }
+    
+    viteProcess.stdout.on("data", extractPort)
+    viteProcess.stderr.on("data", extractPort)
+    
+    viteProcess.on("error", (err) => {
+      reject(new Error(`Failed to start vite preview: ${err.message}`))
+    })
+    
+    viteProcess.on("exit", (code) => {
+      if (code !== 0 && code !== null) {
+        reject(new Error(`Vite preview exited with code ${code}`))
       }
     })
     
-    server.on("error", (err) => {
-      if (err.code === "EADDRINUSE") {
-        reject(new Error(`Port ${port} is already in use`))
-      } else {
-        reject(err)
+    // Timeout if we can't find the port
+    setTimeout(() => {
+      if (!port) {
+        viteProcess.kill()
+        reject(new Error("Could not determine port from vite preview output"))
       }
-    })
-    
-    server.listen(port, () => {
-      console.log(`Local server running on http://localhost:${port}`)
-      resolve(server)
-    })
+    }, 10000)
   })
 }
 
@@ -159,14 +123,8 @@ async function generateStaticHTML() {
     throw new Error("dist directory not found. Please run 'pnpm build' first.")
   }
   
-  // Find an available port
-  console.log("Finding available port...")
-  const port = await findAvailablePort(3000)
-  console.log(`✓ Found available port: ${port}`)
-  
-  // Start local server
-  console.log("Starting local server...")
-  const server = await createLocalServer(port)
+  // Start vite preview server
+  const { process: viteProcess, port } = await startVitePreview()
   
   // Wait for server to be ready
   console.log("Waiting for server to be ready...")
@@ -246,7 +204,11 @@ ${bodyHTML}
     
     await browser.close()
   } finally {
-    server.close()
+    // Kill the vite preview process
+    console.log("Stopping vite preview server...")
+    viteProcess.kill()
+    // Wait a bit for the process to clean up
+    await new Promise(resolve => setTimeout(resolve, 500))
   }
 }
 
