@@ -6,3 +6,4 @@ build
 **/fixtures
 deprecated
 docs/**
+pnpm-lock.yaml
