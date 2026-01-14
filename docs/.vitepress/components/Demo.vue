@@ -472,4 +472,21 @@ and fall back to the layered Tailwind rules. */
   border-top: 1px solid var(--vp-c-divider);
   margin: 0;
 }
+
+.VPPage {
+  .demo-preview {
+    padding: 0;
+    margin: 0;
+  }
+  .demo-container {
+    margin: 0;
+  }
+  .demo-container,
+  .demo-preview {
+    border: 0;
+  }
+  .demo-code {
+     display: none;
+  }
+}
 </style>
