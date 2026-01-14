@@ -137,7 +137,7 @@ function addImport(content, componentName) {
     }
 
     // Add component to existing import
-    const importItems = importsList.split(",").map((i) => i.trim())
+    const importItems = importsList.split(",").map((i) => i.trim()).filter(Boolean)
     importItems.push(componentName)
     // Sort imports alphabetically
     importItems.sort()
