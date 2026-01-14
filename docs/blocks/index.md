@@ -1,3 +1,3 @@
 # Blocks
 
-Blocks are sections of content on a website.
+Blocks are sections of content on a webiste.

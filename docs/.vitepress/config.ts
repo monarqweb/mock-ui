@@ -143,6 +143,7 @@ export default defineConfig({
       { text: "Home", link: "/" },
       { text: "Components", link: "/components/" },
       { text: "Blocks", link: "/blocks/" },
+      { text: "Demo", link: "/demo/" },
     ],
     sidebar: {
       "/components/": [
