@@ -2,10 +2,11 @@ import puppeteer from "puppeteer"
 import { readFileSync, writeFileSync } from "fs"
 import { join, dirname } from "path"
 import { fileURLToPath } from "url"
-import { createServer } from "http"
+import { createServer, get } from "http"
 import { readdirSync, statSync } from "fs"
 import { createReadStream } from "fs"
 import { extname } from "path"
+import { createServer as createNetServer } from "net"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -22,9 +23,78 @@ function findAssetFile(extension) {
   return file ? join(assetsDir, file) : null
 }
 
-// Simple HTTP server to serve the built files
-function createLocalServer(port = 3000) {
+// Check if a port is available
+function isPortAvailable(port) {
   return new Promise((resolve) => {
+    const server = createNetServer()
+    
+    server.once("error", (err) => {
+      if (err.code === "EADDRINUSE") {
+        resolve(false)
+      } else {
+        resolve(false)
+      }
+    })
+    
+    server.once("listening", () => {
+      server.once("close", () => resolve(true))
+      server.close()
+    })
+    
+    server.listen(port)
+  })
+}
+
+// Find an available port starting from startPort
+async function findAvailablePort(startPort = 3000, maxAttempts = 10) {
+  for (let i = 0; i < maxAttempts; i++) {
+    const port = startPort + i
+    const available = await isPortAvailable(port)
+    if (available) {
+      return port
+    }
+  }
+  throw new Error(`Could not find an available port after ${maxAttempts} attempts`)
+}
+
+// Wait for server to be ready by making a test request
+async function waitForServer(port, maxRetries = 30, delay = 500) {
+  const url = `http://localhost:${port}`
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      await new Promise((resolve, reject) => {
+        const req = get(url, (res) => {
+          res.on("data", () => {})
+          res.on("end", () => {
+            if (res.statusCode === 200 || res.statusCode === 404) {
+              resolve()
+            } else {
+              reject(new Error(`Server returned status ${res.statusCode}`))
+            }
+          })
+        })
+        req.on("error", (err) => {
+          reject(err)
+        })
+        req.setTimeout(1000, () => {
+          req.destroy()
+          reject(new Error("Request timeout"))
+        })
+      })
+      return true
+    } catch (err) {
+      // Server not ready yet, wait and retry
+      if (i < maxRetries - 1) {
+        await new Promise(resolve => setTimeout(resolve, delay))
+      }
+    }
+  }
+  throw new Error(`Server at ${url} did not become ready after ${maxRetries} attempts`)
+}
+
+// Simple HTTP server to serve the built files
+function createLocalServer(port) {
+  return new Promise((resolve, reject) => {
     const server = createServer((req, res) => {
       let filePath = join(distDir, req.url === "/" ? "index.html" : req.url)
       
@@ -62,6 +132,14 @@ function createLocalServer(port = 3000) {
       }
     })
     
+    server.on("error", (err) => {
+      if (err.code === "EADDRINUSE") {
+        reject(new Error(`Port ${port} is already in use`))
+      } else {
+        reject(err)
+      }
+    })
+    
     server.listen(port, () => {
       console.log(`Local server running on http://localhost:${port}`)
       resolve(server)
@@ -81,8 +159,20 @@ async function generateStaticHTML() {
     throw new Error("dist directory not found. Please run 'pnpm build' first.")
   }
   
+  // Find an available port
+  console.log("Finding available port...")
+  const port = await findAvailablePort(3000)
+  console.log(`✓ Found available port: ${port}`)
+  
   // Start local server
-  const server = await createLocalServer(3000)
+  console.log("Starting local server...")
+  const server = await createLocalServer(port)
+  
+  // Wait for server to be ready
+  console.log("Waiting for server to be ready...")
+  await waitForServer(port)
+  const serverUrl = `http://localhost:${port}`
+  console.log(`✓ Server is ready at ${serverUrl}`)
   
   try {
     // Launch browser
@@ -98,8 +188,8 @@ async function generateStaticHTML() {
     await page.setViewport({ width: 1920, height: 1080 })
     
     // Navigate to the built app
-    console.log("Loading page...")
-    await page.goto("http://localhost:3000", {
+    console.log(`Loading page from ${serverUrl}...`)
+    await page.goto(serverUrl, {
       waitUntil: "networkidle0",
       timeout: 30000,
     })
