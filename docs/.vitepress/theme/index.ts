@@ -13,9 +13,14 @@ import "./style.css" // your Tailwind + overrides load after
 
 import Demo from "../components/Demo.vue"
 
+// Heros
+import { PropertySearchHero } from '../../../src/components/blocks/hero'
+
 export default {
   ...DefaultTheme,
   enhanceApp({ app }) {
     app.component("Demo", Demo)
+
+    app.component("PropertySearchHero", PropertySearchHero)
   },
 }
