@@ -2,9 +2,11 @@ import { defineConfig } from "vitepress"
 import { resolve } from "path"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
+
 import { demoPlugin } from "./plugins/demo"
 import { generateSidebarItems } from "./utils/sidebar"
 import { componentIntroPlugin } from "./plugins/component-intro"
+import { propsTablePlugin } from "./plugins/props-table"
 
 export default defineConfig({
   title: "Chrysalis",
@@ -26,7 +28,8 @@ export default defineConfig({
   markdown: {
     config: (md) => {
       md.use(demoPlugin),
-      md.use(componentIntroPlugin)
+      md.use(componentIntroPlugin),
+      md.use(propsTablePlugin)
     },
   },
 
