@@ -3,6 +3,7 @@ import { resolve } from "path"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
 
+// Component Plugins
 import { demoPlugin } from "./plugins/demo"
 import { generateSidebarItems } from "./utils/sidebar"
 import { componentIntroPlugin } from "./plugins/component-intro"
@@ -11,6 +12,9 @@ import { eventsTablePlugin } from "./plugins/events-table"
 import { taxonomyTablePlugin } from "./plugins/taxonomy-table"
 import { typesTablePlugin } from "./plugins/types-table"
 import { componentApiReferencePlugin } from "./plugins/component-api-reference"
+
+// Taxonomy Plugins
+import { definitionsTablePlugin } from "./plugins/definitions-table"
 
 export default defineConfig({
   title: "Chrysalis",
@@ -38,6 +42,7 @@ export default defineConfig({
       md.use(taxonomyTablePlugin)
       md.use(typesTablePlugin)
       md.use(componentApiReferencePlugin)
+      md.use(definitionsTablePlugin)
     },
   },
 
