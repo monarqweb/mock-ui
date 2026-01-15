@@ -57,7 +57,20 @@ export default defineConfig({
     ],
     sidebar: {
       "/components/": generateSidebarItems("docs/components/"),
-      "/blocks/": generateSidebarItems("docs/blocks"),
+      "/blocks/": [
+        {
+          text: 'Introduction',
+          items: [
+            { text: 'What are blocks?', link: '/blocks/introduction/what-are-blocks' },
+          ]
+        },
+        {
+          text: 'Hero',
+          items: [
+            { text: 'Property Search Hero', link: '/blocks/hero/property-search-hero' },
+          ]
+        },
+      ],
       "/taxonomy/": generateSidebarItems("docs/taxonomy/"),
     },
   },
