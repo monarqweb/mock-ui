@@ -51,15 +51,14 @@ export default defineConfig({
       provider: 'local'
     },
     nav: [
-      { text: "Guide", link: "/guide/introduction/what-is-chrysalis" },
       { text: "Components", link: "/components/" },
       { text: "Blocks", link: "/blocks/introduction/what-are-blocks" },
+      { text: "Taxonomy", link: "/taxonomy/" },
     ],
     sidebar: {
-      "/guide/": generateSidebarItems("docs/guide/"),
       "/components/": generateSidebarItems("docs/components/"),
       "/blocks/": generateSidebarItems("docs/blocks"),
-      
+      "/taxonomy/": generateSidebarItems("docs/taxonomy/"),
     },
   },
 })
