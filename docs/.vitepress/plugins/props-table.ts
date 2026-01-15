@@ -22,47 +22,62 @@ function resolveRepoPath(filePath: string) {
 
 type PropRow = {
   name: string
+  description?: string
   type: string
   required: boolean
   default?: string
-  options?: string[]
-  interface?: string
-  description?: string
 }
 
-function renderPropsTable(rows: PropRow[]) {
+export function renderPropsTable(rows: PropRow[]) {
   if (!rows.length) {
     return `<blockquote>No props found for this component.</blockquote>`
   }
+
+  // Define column structure
+  const columns = [
+    { header: "Prop", getValue: (r: PropRow) => `<code>${escapeHtml(r.name)}</code>`, alwaysShow: true },
+    { header: "Description", getValue: (r: PropRow) => r.description ? escapeHtml(r.description) : "—", alwaysShow: false },
+    { header: "Type", getValue: (r: PropRow) => `<code>${escapeHtml(r.type)}</code>`, alwaysShow: true },
+    { header: "Required", getValue: (r: PropRow) => r.required ? "Yes" : "—", alwaysShow: true },
+    { header: "Default", getValue: (r: PropRow) => r.default ? `<code>${escapeHtml(r.default)}</code>` : "—", alwaysShow: false },
+  ]
+
+  // Determine which columns to show (always show columns marked as alwaysShow, or if any row has non-empty value)
+  const visibleColumns = columns.map((col, index) => {
+    if (col.alwaysShow) return true
+    // Check if any row has a non-empty value for this column
+    return rows.some((r) => {
+      const value = col.getValue(r)
+      return value !== "—"
+    })
+  })
+
+  // Build header
+  const headerCells = columns
+    .filter((_, index) => visibleColumns[index])
+    .map((col) => `<th>${col.header}</th>`)
+    .join("")
 
   const header = `
 <table>
   <thead>
     <tr>
-      <th>Prop</th>
-      <th>Type</th>
-      <th>Required</th>
-      <th>Default</th>
-      <th>Options</th>
-      <th>Interface</th>
-      <th>Description</th>
+      ${headerCells}
     </tr>
   </thead>
   <tbody>
 `
 
+  // Build body rows
   const body = rows
     .map((r) => {
-      const options = r.options?.length ? r.options.join(", ") : "—"
+      const cells = columns
+        .filter((_, index) => visibleColumns[index])
+        .map((col) => `<td>${col.getValue(r)}</td>`)
+        .join("")
       return `
     <tr>
-      <td><code>${escapeHtml(r.name)}</code></td>
-      <td><code>${escapeHtml(r.type)}</code></td>
-      <td>${r.required ? "Yes" : "No"}</td>
-      <td>${r.default ? `<code>${escapeHtml(r.default)}</code>` : "—"}</td>
-      <td>${options !== "—" ? `<code>${escapeHtml(options)}</code>` : "—"}</td>
-      <td>${r.interface ? `<code>${escapeHtml(r.interface)}</code>` : "—"}</td>
-      <td>${r.description ? escapeHtml(r.description) : "—"}</td>
+      ${cells}
     </tr>
 `
     })
@@ -119,33 +134,6 @@ function getJsDocDefault(node: ts.Node, sourceFile: ts.SourceFile) {
       }
     }
   }
-  return undefined
-}
-
-function deriveOptionsFromTypeText(typeText: string) {
-  // Only extract literal string unions for determinism.
-  // Example: "left" | "right"
-  const literals = [...typeText.matchAll(/"([^"]+)"/g)].map((m) => m[1])
-  return literals.length >= 2 ? literals : undefined
-}
-
-function interfaceNameFromTypeNode(typeNode: ts.TypeNode | undefined, sourceFile: ts.SourceFile) {
-  if (!typeNode) return undefined
-
-  // FormField[] -> FormField
-  if (ts.isArrayTypeNode(typeNode)) {
-    const el = typeNode.elementType
-    if (ts.isTypeReferenceNode(el) && ts.isIdentifier(el.typeName)) {
-      return el.typeName.getText(sourceFile)
-    }
-  }
-
-  // PropertySearchHeroForm -> PropertySearchHeroForm
-  if (ts.isTypeReferenceNode(typeNode) && ts.isIdentifier(typeNode.typeName)) {
-    return typeNode.typeName.getText(sourceFile)
-  }
-
-  // { ... } inline types are not linked as interfaces
   return undefined
 }
 
@@ -218,7 +206,7 @@ function findPropsInterface(
   return undefined
 }
 
-function extractPropsFromInterface(sourceFile: ts.SourceFile): PropRow[] {
+export function extractPropsFromInterface(sourceFile: ts.SourceFile): PropRow[] {
   const iface = findPropsInterface(sourceFile)
   if (!iface) return []
 
@@ -245,19 +233,11 @@ function extractPropsFromInterface(sourceFile: ts.SourceFile): PropRow[] {
     // default (from @default tag on the property)
     const def = getJsDocDefault(member, sourceFile)
 
-    // options (derived from union literal strings)
-    const options = deriveOptionsFromTypeText(typeText)
-
-    // interface hint (for object/array props)
-    const ifaceName = interfaceNameFromTypeNode(member.type, sourceFile)
-
     rows.push({
       name,
       type: typeText,
       required,
       default: def,
-      options,
-      interface: ifaceName,
       description,
     })
   }

@@ -22,13 +22,13 @@ function resolveRepoPath(filePath: string) {
 
 type EventRow = {
   event: string
+  description?: string
   listenVia: string
   when?: string
   payload?: string
-  description?: string
 }
 
-function renderEventsTable(rows: EventRow[]) {
+export function renderEventsTable(rows: EventRow[]) {
   if (!rows.length) {
     return `<blockquote>No events found for this component.</blockquote>`
   }
@@ -38,10 +38,10 @@ function renderEventsTable(rows: EventRow[]) {
   <thead>
     <tr>
       <th>Event</th>
+      <th>Description</th>
       <th>Listen via</th>
       <th>When it fires</th>
       <th>Payload</th>
-      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -52,10 +52,10 @@ function renderEventsTable(rows: EventRow[]) {
       return `
     <tr>
       <td><code>${escapeHtml(r.event)}</code></td>
+      <td>${r.description ? escapeHtml(r.description) : "—"}</td>
       <td><code>${escapeHtml(r.listenVia)}</code></td>
       <td>${r.when ? escapeHtml(r.when) : "—"}</td>
       <td>${r.payload ? `<code>${escapeHtml(r.payload)}</code>` : "—"}</td>
-      <td>${r.description ? escapeHtml(r.description) : "—"}</td>
     </tr>
 `
     })
@@ -154,7 +154,7 @@ function jsDocDescription(doc: ts.JSDoc): string | undefined {
   return undefined
 }
 
-function extractEventsFromPropsInterface(sourceFile: ts.SourceFile): EventRow[] {
+export function extractEventsFromPropsInterface(sourceFile: ts.SourceFile): EventRow[] {
   const iface = findPropsInterface(sourceFile)
   if (!iface) return []
 

@@ -1,4 +1,4 @@
-// docs/.vitepress/plugins/meta-table.ts
+// docs/.vitepress/plugins/taxonomy-table.ts
 import fs from "node:fs"
 import path from "node:path"
 import type MarkdownIt from "markdown-it"
@@ -106,6 +106,7 @@ function renderMetaTable(meta: Meta) {
     : "—"
 
   return `
+<h2>Taxonomy</h2>
 <table>
   <thead>
     <tr>
@@ -127,28 +128,28 @@ function renderMetaTable(meta: Meta) {
 `
 }
 
-export function metaTablePlugin(md: MarkdownIt) {
-  const RE = /^@metaTable\(([^)]+)\)\s*$/
+export function taxonomyTablePlugin(md: MarkdownIt) {
+  const RE = /^@taxonomyTable\(([^)]+)\)\s*$/
 
-  md.block.ruler.before("paragraph", "meta_table", (state, startLine, _endLine, silent) => {
+  md.block.ruler.before("paragraph", "taxonomy_table", (state, startLine, _endLine, silent) => {
     const line = state.src.slice(state.bMarks[startLine], state.eMarks[startLine]).trim()
     const m = line.match(RE)
     if (!m) return false
     if (silent) return true
 
-    const token = state.push("meta_table", "", 0)
+    const token = state.push("taxonomy_table", "", 0)
     token.meta = { filePath: m[1].trim() }
 
     state.line = startLine + 1
     return true
   })
 
-  md.renderer.rules.meta_table = (tokens, idx) => {
+  md.renderer.rules.taxonomy_table = (tokens, idx) => {
     const filePath = tokens[idx].meta?.filePath as string
     const { cleaned, abs } = resolveRepoPath(filePath)
 
     if (!fs.existsSync(abs)) {
-      return `<blockquote>MetaTable error: file not found: <code>${escapeHtml(
+      return `<blockquote>TaxonomyTable error: file not found: <code>${escapeHtml(
         cleaned
       )}</code></blockquote>`
     }
@@ -157,7 +158,7 @@ export function metaTablePlugin(md: MarkdownIt) {
     const jsdoc = extractFirstJsdocBlock(source)
 
     if (!jsdoc) {
-      return `<blockquote>MetaTable error: no JSDoc found in <code>${escapeHtml(
+      return `<blockquote>TaxonomyTable error: no JSDoc found in <code>${escapeHtml(
         cleaned
       )}</code></blockquote>`
     }

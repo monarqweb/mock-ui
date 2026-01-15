@@ -8,7 +8,9 @@ import { generateSidebarItems } from "./utils/sidebar"
 import { componentIntroPlugin } from "./plugins/component-intro"
 import { propsTablePlugin } from "./plugins/props-table"
 import { eventsTablePlugin } from "./plugins/events-table"
-import { metaTablePlugin } from "./plugins/meta-table"
+import { taxonomyTablePlugin } from "./plugins/taxonomy-table"
+import { typesTablePlugin } from "./plugins/types-table"
+import { componentApiReferencePlugin } from "./plugins/component-api-reference"
 
 export default defineConfig({
   title: "Chrysalis",
@@ -29,11 +31,13 @@ export default defineConfig({
 
   markdown: {
     config: (md) => {
-      md.use(demoPlugin),
-      md.use(componentIntroPlugin),
-      md.use(propsTablePlugin),
+      md.use(demoPlugin)
+      md.use(componentIntroPlugin)
+      md.use(propsTablePlugin)
       md.use(eventsTablePlugin)
-      md.use(metaTablePlugin)
+      md.use(taxonomyTablePlugin)
+      md.use(typesTablePlugin)
+      md.use(componentApiReferencePlugin)
     },
   },
 
