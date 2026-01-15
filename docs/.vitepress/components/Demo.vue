@@ -471,6 +471,7 @@ and fall back to the layered Tailwind rules. */
   border: none;
   border-top: 1px solid var(--vp-c-divider);
   margin: 0;
+  max-height: 30rem;
 }
 
 .VPPage {
