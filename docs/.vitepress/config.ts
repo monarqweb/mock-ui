@@ -8,6 +8,7 @@ import { generateSidebarItems } from "./utils/sidebar"
 import { componentIntroPlugin } from "./plugins/component-intro"
 import { propsTablePlugin } from "./plugins/props-table"
 import { eventsTablePlugin } from "./plugins/events-table"
+import { metaTablePlugin } from "./plugins/meta-table"
 
 export default defineConfig({
   title: "Chrysalis",
@@ -32,6 +33,7 @@ export default defineConfig({
       md.use(componentIntroPlugin),
       md.use(propsTablePlugin),
       md.use(eventsTablePlugin)
+      md.use(metaTablePlugin)
     },
   },
 
