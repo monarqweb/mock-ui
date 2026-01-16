@@ -10,4 +10,4 @@ Intent should be stable over time.
 
 ## Definitions
 
-@definitionsTable(/src/components/blocks-taxonomy/intent.ts, INTENT_DEFINITIONS)
+@definitionsTable(/src/components/blocks/definitions/intent.ts, INTENT_DEFINITIONS)

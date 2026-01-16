@@ -8,4 +8,4 @@ Category describes a block based on its content and how its used. These are larg
 
 ## Definitions
 
-@definitionsTable(/src/components/blocks-taxonomy/category.ts, CATEGORY_DEFINITIONS)
+@definitionsTable(/src/components/blocks/definitions/category.ts, CATEGORY_DEFINITIONS)

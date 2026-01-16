@@ -14,6 +14,7 @@
     "typecheck": "tsc -b --noEmit",
     "test": "echo \"No tests specified\"",
     "preview": "vite preview",
+    "validate:taxonomy": "node scripts/validate-block-taxonomy.mjs",
     "docs:dev": "concurrently -n \"tsc,vite,docs\" -c \"blue,cyan,magenta\" \"tsc -b --watch\" \"vite build --watch\" \"vitepress dev docs\"",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
