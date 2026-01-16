@@ -42,6 +42,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Validate block taxonomy
+        run: node scripts/validate-block-taxonomy.mjs
+
       - name: Build packages
         run: pnpm build --filter=shadcn
 
