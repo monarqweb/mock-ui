@@ -10,4 +10,4 @@ Tone is orthogonal to intent. A conversion block can be calm or aggressive.
 
 ## Definitions
 
-@definitionsTable(/src/components/blocks-taxonomy/tone.ts, TONE_DEFINITIONS)
+@definitionsTable(/src/components/blocks/definitions/tone.ts, TONE_DEFINITIONS)

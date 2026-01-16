@@ -10,4 +10,4 @@ Only tag an industry when the block’s structure, props, or default semantics a
 
 ## Definitions
 
-@definitionsTable(/src/components/blocks-taxonomy/industry.ts, INDUSTRY_DEFINITIONS)
+@definitionsTable(/src/components/blocks/definitions/industry.ts, INDUSTRY_DEFINITIONS)
