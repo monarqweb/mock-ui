@@ -417,8 +417,68 @@ async function renderDemo() {
       throw new Error("Demo code did not return a valid React element")
     }
 
+    // Create Error Boundary component to catch render errors
+    class ErrorBoundary extends React.Component<
+      { children: React.ReactNode; onError: (error: Error) => void },
+      { hasError: boolean; error: Error | null }
+    > {
+      constructor(props: any) {
+        super(props)
+        this.state = { hasError: false, error: null }
+      }
+
+      static getDerivedStateFromError(error: Error) {
+        return { hasError: true, error }
+      }
+
+      componentDidCatch(error: Error) {
+        this.props.onError(error)
+      }
+
+      render() {
+        if (this.state.hasError && this.state.error) {
+          return React.createElement(
+            "div",
+            {
+              style: {
+                color: "#ef4444",
+                padding: "1rem",
+                fontFamily: "ui-monospace, monospace",
+                fontSize: "0.875rem",
+                background: "#fef2f2",
+                border: "1px solid #fecaca",
+                borderRadius: "4px",
+              },
+            },
+            React.createElement("strong", null, "Error: "),
+            this.state.error.message,
+            this.state.error.stack &&
+              React.createElement(
+                "pre",
+                {
+                  style: {
+                    marginTop: "0.5rem",
+                    fontSize: "0.75rem",
+                    opacity: 0.8,
+                  },
+                },
+                this.state.error.stack
+              )
+          )
+        }
+        return this.props.children
+      }
+    }
+
     reactRoot = createRoot(containerRef.value)
-    reactRoot.render(element)
+    reactRoot.render(
+      React.createElement(ErrorBoundary, {
+        onError: (error: Error) => {
+          console.error("Error in demo component:", error)
+        },
+        children: element,
+      })
+    )
   } catch (error: any) {
     console.error("Error rendering demo:", error)
     if (containerRef.value) {
