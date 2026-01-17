@@ -43,6 +43,8 @@ export interface SocialIconsProps {
   email?: string
   /** Additional CSS classes */
   className?: string
+  /** CSS classes for the icon elements */
+  iconClassName?: string
 }
 
 const iconMap = {
@@ -62,6 +64,7 @@ export function SocialIcons({
   youtube,
   email,
   className,
+  iconClassName = "size-5",
 }: SocialIconsProps) {
   const socialLinks = [
     { key: "twitter", url: twitter, icon: iconMap.twitter },
@@ -88,10 +91,10 @@ export function SocialIcons({
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-foreground hover:text-foreground/70 transition-colors"
+          className="hover:text-foreground/70 text-inherit transition-colors"
           aria-label={`Visit our ${key} page`}
         >
-          <Icon className="size-5" />
+          <Icon className={iconClassName} />
         </a>
       ))}
     </div>

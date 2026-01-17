@@ -49,7 +49,7 @@ export function LinkList({ links, className }: LinkListProps) {
             href={item.href}
             target={item.target}
             className={cn(
-              "text-foreground hover:text-foreground/30 tracking-tight",
+              "tracking-tight text-inherit! hover:opacity-70",
               item.trailingIcon && "group flex items-center gap-1"
             )}
           >

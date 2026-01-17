@@ -310,3 +310,11 @@ select {
     @apply bg-background text-foreground;
   }
 }
+
+.vp-doc .demo-sandbox .container,
+.container {
+  @apply mx-auto;
+  @apply px-6;
+  @apply md:px-8;
+  @apply lg:px-12;
+}

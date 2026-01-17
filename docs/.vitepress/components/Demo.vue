@@ -113,10 +113,7 @@ async function renderDemo() {
   await nextTick()
 
   // Clear previous content
-  if (reactRoot) {
-    reactRoot.unmount()
-    reactRoot = null
-  }
+  // Don't unmount the root - we'll reuse it to avoid the createRoot warning
   containerRef.value.innerHTML = ""
 
   try {
@@ -470,7 +467,10 @@ async function renderDemo() {
       }
     }
 
-    reactRoot = createRoot(containerRef.value)
+    // Reuse existing root or create a new one
+    if (!reactRoot) {
+      reactRoot = createRoot(containerRef.value)
+    }
     reactRoot.render(
       React.createElement(ErrorBoundary, {
         onError: (error: Error) => {
@@ -488,7 +488,7 @@ async function renderDemo() {
 }
 </script>
 
-<style scoped>
+<style>
 .demo-container {
   margin: 1.5rem 0;
   border: 1px solid var(--vp-c-divider);
