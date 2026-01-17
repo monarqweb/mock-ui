@@ -23,7 +23,7 @@ const CONFIG = {
       definitionFile: "src/components/blocks/definitions/industry.ts",
       exportName: "INDUSTRY_DEFINITIONS",
       tag: "@industry",
-      required: true,
+      required: false,
       multi: true,
     },
     {
@@ -199,7 +199,7 @@ function validateBlockFile(absPath, allowedByTaxonomy) {
         line: 1,
         kind: "missing_jsdoc",
         message:
-          "Missing leading JSDoc block. Add a top-of-file /** ... */ block with @category, @industry, @intent, and @tone.",
+          "Missing leading JSDoc block. Add a top-of-file /** ... */ block with @category, @intent, and @tone. @industry is optional.",
       },
     ]
   }
