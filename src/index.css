@@ -5,6 +5,8 @@
 
 /* Light Theme Colors */
 :root {
+  /* Spacing */
+  --spacing: 4px;
   /* Custom Breakpoints */
   --breakpoint-3xl: 1600px;
   --breakpoint-4xl: 2000px;
