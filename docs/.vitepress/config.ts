@@ -53,25 +53,10 @@ export default defineConfig({
     nav: [
       { text: "Components", link: "/components/" },
       { text: "Blocks", link: "/blocks/introduction/what-are-blocks" },
-      { text: "Taxonomy", link: "/taxonomy/" },
     ],
     sidebar: {
       "/components/": generateSidebarItems("docs/components/"),
-      "/blocks/": [
-        {
-          text: 'Introduction',
-          items: [
-            { text: 'What are blocks?', link: '/blocks/introduction/what-are-blocks' },
-          ]
-        },
-        {
-          text: 'Hero',
-          items: [
-            { text: 'Property Search Hero', link: '/blocks/hero/property-search-hero' },
-          ]
-        },
-      ],
-      "/taxonomy/": generateSidebarItems("docs/taxonomy/"),
+      "/blocks/": generateSidebarItems("docs/blocks/"),
     },
   },
 })
