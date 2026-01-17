@@ -12,6 +12,78 @@ function escapeHtml(s: string) {
     .replace(/"/g, "&quot;")
 }
 
+function getBaseFromConfig(): string {
+  const configPath = path.join(__dirname, "../config.ts")
+  if (!fs.existsSync(configPath)) {
+    return "/"
+  }
+  
+  const configContent = fs.readFileSync(configPath, "utf8")
+  // Extract base value from config: base: "/chrysalis/",
+  const baseMatch = configContent.match(/base:\s*["']([^"']+)["']/)
+  return baseMatch ? baseMatch[1] : "/"
+}
+
+function processDescription(description: string | undefined, base: string): string {
+  if (!description) return "—"
+  
+  // Convert markdown links [text](url) to HTML links
+  const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g
+  
+  // Helper function to normalize URLs
+  function normalizeUrl(url: string): string {
+    // If it's already an absolute URL (http/https) or absolute path starting with /, use as-is
+    if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")) {
+      return url
+    }
+    
+    // Relative path: convert to absolute path with base
+    const cleanPath = url.startsWith("/") ? url.slice(1) : url
+    
+    // Add .html extension if not already present and not a hash/anchor link
+    let finalPath = cleanPath
+    if (!cleanPath.includes("#") && !cleanPath.endsWith(".html") && !cleanPath.endsWith("/")) {
+      finalPath = `${cleanPath}.html`
+    }
+    
+    // Ensure base ends with / for proper path joining
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`
+    return `${normalizedBase}${finalPath}`
+  }
+  
+  // Split the description into parts: text and markdown links
+  const parts: string[] = []
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+  
+  while ((match = markdownLinkRegex.exec(description)) !== null) {
+    // Add text before the link (escaped)
+    if (match.index > lastIndex) {
+      parts.push(escapeHtml(description.slice(lastIndex, match.index)))
+    }
+    
+    // Add the HTML link (text and url are already captured, escape them)
+    const linkText = escapeHtml(match[1])
+    const rawUrl = match[2]
+    const normalizedUrl = normalizeUrl(rawUrl)
+    parts.push(`<a href="${escapeHtml(normalizedUrl)}">${linkText}</a>`)
+    
+    lastIndex = match.index + match[0].length
+  }
+  
+  // Add remaining text after the last link (escaped)
+  if (lastIndex < description.length) {
+    parts.push(escapeHtml(description.slice(lastIndex)))
+  }
+  
+  // If no links were found, just escape the whole description
+  if (parts.length === 0) {
+    return escapeHtml(description)
+  }
+  
+  return parts.join("")
+}
+
 function resolveRepoPath(filePath: string) {
   const cleaned = filePath.trim().replace(/^['"]|['"]$/g, "")
   const abs = path.isAbsolute(cleaned)
@@ -33,10 +105,13 @@ export function renderPropsTable(rows: PropRow[]) {
     return `<blockquote>No props found for this component.</blockquote>`
   }
 
+  // Get base from config
+  const base = getBaseFromConfig()
+
   // Define column structure
   const columns = [
     { header: "Prop", getValue: (r: PropRow) => `<code>${escapeHtml(r.name)}</code>`, alwaysShow: true },
-    { header: "Description", getValue: (r: PropRow) => r.description ? escapeHtml(r.description) : "—", alwaysShow: false },
+    { header: "Description", getValue: (r: PropRow) => processDescription(r.description, base), alwaysShow: false },
     { header: "Type", getValue: (r: PropRow) => `<code>${escapeHtml(r.type)}</code>`, alwaysShow: true },
     { header: "Required", getValue: (r: PropRow) => r.required ? "Yes" : "—", alwaysShow: true },
     { header: "Default", getValue: (r: PropRow) => r.default ? `<code>${escapeHtml(r.default)}</code>` : "—", alwaysShow: false },
